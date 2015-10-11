@@ -67,7 +67,7 @@
 </body>
 
 </html>
-<script >
+<script>
 function getSubmitForm(){
 	
 	/*  = '{"symbol":
@@ -79,7 +79,5 @@ function getSubmitForm(){
 	var transInfo;
 	price = document.getElementById("price").value;
 	document.getElementById("demo").innerHTML = price;
-	
 }
-
 </script>
