@@ -11,8 +11,8 @@ import org.json.JSONArray;
 import util.JSONUtil;
 
 public class Database {
-	static String jdbcUrl = "jdbc:mysql://cs4111.cf7twhrk80xs.us-west-2.rds.amazonaws.com:3306/cs4111";
-	static Connection conn;
+	static String jdbcUrl = "jdbc:mysql://cs4111.cf7twhrk80xs.us-west-2.rds.amazonaws.com:3306/V_Trade";
+	static Connection conn = null;
 	private static Statement stmt;
 
 	public Database() throws SQLException {
@@ -20,6 +20,8 @@ public class Database {
 	}
 
 	public static void connect() throws SQLException {
+		if (conn != null)
+			return ;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
@@ -43,7 +45,7 @@ public class Database {
 	public static JSONArray test() {
 		try {
 			stmt = conn.createStatement();
-			ResultSet rset = stmt.executeQuery("show tables");
+			ResultSet rset = stmt.executeQuery("select * from Trader");
 			return JSONUtil.convert(rset);
 		} catch (SQLException e) {
 			return null;
