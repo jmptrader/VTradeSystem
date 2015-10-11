@@ -28,9 +28,11 @@ public class VTServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PrintWriter out = response.getWriter();
-        out.println("Hello, world!");
-        out.close();
+		String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String message = null;
+        
+        System.out.println(username);
 	}
 
 	/**
