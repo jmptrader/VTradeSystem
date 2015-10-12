@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import DB.Database;
+
 /**
  * Servlet implementation class addTrade
  */
@@ -35,7 +37,7 @@ public class addTrade extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		if (Server.db.addTrade(request.getParameter("symbol"),
+		if (Database.addTrade(request.getParameter("symbol"),
 				request.getParameter("exp"),
 				request.getParameter("lots"),
 				request.getParameter("price"),

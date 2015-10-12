@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import DB.Database;
+
 /**
  * Servlet implementation class getTrade
  */
@@ -32,7 +34,7 @@ public class getTrade extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		JSONObject test = Server.db.getTrade();
+		JSONObject test = Database.getTrade();
 		response.setContentType("application/json");
 		response.getWriter().write(test.toString());
 	}
