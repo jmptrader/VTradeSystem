@@ -45,11 +45,8 @@ public class addTrade extends HttpServlet {
 				request.getParameter("trader"),
 				request.getParameter("transDate"),
 				request.getParameter("transTime"))) {
-			request.setAttribute("notify", "Success!");
-		} else {
-			request.setAttribute("message",
-					"Please check the field of the input!");
-		}
+			response.sendRedirect(request.getContextPath());
+		} 
 	}
 
 }
