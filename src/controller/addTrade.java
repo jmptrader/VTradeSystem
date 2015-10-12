@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,20 +8,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 /**
- * Servlet implementation class getTrade
+ * Servlet implementation class addTrade
  */
-@WebServlet("/getTrade")
-public class getTrade extends HttpServlet {
+@WebServlet("/addTrade")
+public class addTrade extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public getTrade() {
+    public addTrade() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,9 +28,6 @@ public class getTrade extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		JSONObject test = Server.db.getTrade();
-		response.setContentType("application/json");
-		response.getWriter().write(test.toString());
 	}
 
 	/**
@@ -42,6 +35,19 @@ public class getTrade extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		if (Server.db.addTrade(request.getParameter("symbol"),
+				request.getParameter("exp"),
+				request.getParameter("lots"),
+				request.getParameter("price"),
+				request.getParameter("buysell"),
+				request.getParameter("trader"),
+				request.getParameter("transDate"),
+				request.getParameter("transTime"))) {
+			request.setAttribute("notify", "Success!");
+		} else {
+			request.setAttribute("message",
+					"Please check the field of the input!");
+		}
 	}
 
 }

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import util.JSONUtil;
 
@@ -42,13 +43,27 @@ public class Database {
 		}
 	}
 
-	public static JSONArray test() {
+	public static JSONObject getTrade() {
 		try {
 			stmt = conn.createStatement();
 			ResultSet rset = stmt.executeQuery("select * from Trader");
-			return JSONUtil.convert(rset);
+			JSONObject jsonobject = new JSONObject();
+			jsonobject.put("test", JSONUtil.convert(rset));
+			return jsonobject;
 		} catch (SQLException e) {
 			return null;
+		}
+	}
+
+	public static boolean addTrade(String symbol, String exp, String lots, String price, String buysell, String trader, String transDate, String transTime) {
+		try {
+			stmt = conn.createStatement();
+			ResultSet rset = stmt.executeQuery("select * from Trader");
+			System.out.println(transDate);
+			System.out.println(transTime);
+			return true;
+		} catch (SQLException e) {
+			return false;
 		}
 	}
 }

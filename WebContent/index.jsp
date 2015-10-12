@@ -15,77 +15,79 @@
         clear: both;
     } */
    </style>
+<script src="https://fb.me/react-0.14.0.js"></script>
+<script src="https://fb.me/react-dom-0.14.0.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js" charset="utf-8"></script>
 </head>
 <body>
 <h2>VTrade System</h2>
-	<%
-		if (request.getAttribute("test") != null) {
-	%>
-	<div>
-		<%=request.getAttribute("test")%>
-	</div>
-	<%
-		}
-	%>
+<div id="tradeInfo"></div>
+<button id="getTradeInfo">Get Trade Info</button>
 <p>Please input your transaction information below:</p>
 <div class="container">
-<form>
+<form action="addTrade" method="POST">
   <table>
     <tr>
       <td align="right">Future Symbol:</td>
-      <td align="left"><input type="text" id="symbol" /></td>
+      <td align="left"><input type="text" name="symbol" /></td>
     </tr>
     <tr>
       <td align="right">Contract Expiry:</td>
-      <td align="left"><input type="text" id="exp" /></td>
+      <td align="left"><input type="text" name="exp" /></td>
     </tr>
     <tr>
       <td align="right">Lots:</td>
-      <td align="left"><input type="text" id="lots" /></td>
+      <td align="left"><input type="text" name="lots" /></td>
     </tr>
     <tr>
       <td align="right">Price:</td>
-      <td align="left"><input type="text" id="price" /></td>
+      <td align="left"><input type="text" name="price" /></td>
     </tr>
     <tr>
       <td align="right">Buy/Sell:</td>
-      <td align="left"><input type="radio" id="buysell" value="buy" checked />Buy</td>
-      <td align="left"><input type="radio" id="buysell" value="sell" />Sell</td>
+      <td align="left"><input type="radio" name="buysell" value="buy" checked />Buy</td>
+      <td align="left"><input type="radio" name="buysell" value="sell" />Sell</td>
     </tr>
     <tr>
       <td align="right">Trader:</td>
-      <td align="left"><input type="text" id="trader" /></td>
+      <td align="left"><input type="text" name="trader" /></td>
     </tr>
     <tr>
       <td align="right">Transaction Date:</td>
-      <td align="left"><input type="date" id="transDate"></td>
+      <td align="left"><input type="date" name="transDate"></td>
     </tr>
     <tr>
       <td align="right">Transaction Time:</td>
-      <td align="left"><input type="time" id="transTime" /></td>
+      <td align="left"><input type="time" name="transTime" /></td>
     </tr>
   </table>
+  <input type="submit">
 </form>
 </div>
-<div>
-	<input type="submit" onclick="getSubmitForm()" />
-</div>
-<p id="demo"></p>
 
 </body>
 
 </html>
-<script>
-function getSubmitForm(){
-	
-	/*  = '{"symbol":
-		
-		":[' +
-	'{"firstName":"John","lastName":"Doe" },' +
-	'{"firstName":"Anna","lastName":"Smith" },' +
-	'{"firstName":"Peter","lastName":"Jones" }]}'; */
-	var transInfo;
-	price = document.getElementById("price").value;
-	document.getElementById("demo").innerHTML = price;
-}
+
+<script type="text/babel">
+var TradeInfo = React.createClass({
+	  render: function() {
+	    return (
+	      <div>
+			Hi~~~~~
+			{this.props.tradeDate.map(function(trade){
+                return <div key={trade}>trade: {trade}</div>;
+            })}
+	      </div>
+	    );
+	  }
+	});
+
+ReactDOM.render(<TradeInfo tradeDate={[]}/>, document.getElementById("tradeInfo"));
+$('#getTradeInfo').on('click', function(){
+	$.get("http://localhost:8080/VTradeSystem/getTrade", function(result) {
+	  ReactDOM.render(<TradeInfo tradeDate = {result['test']}/>, document.getElementById("tradeInfo"));
+    });
+});
 </script>
