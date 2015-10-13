@@ -103,7 +103,7 @@
 							class="form-horizontal" role="form">
 							<div class="form-group">
 								<label for="exampleInputEmail1">Trader id:</label> <input
-									required type="number" min="1" max="50000" class="form-control"
+									required type="number" min="1" class="form-control"
 									placeholder="Enter trader id" name="traderId">
 							</div>
 							<input class="btn btn-lg btn-primary btn-block" type="submit"
