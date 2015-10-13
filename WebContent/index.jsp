@@ -63,8 +63,8 @@
 						</div>
 						<div class="form-group">
 							<label>Buy/Sell:</label> <input type="radio" name="buysell"
-								value="buy" checked> Buy <input type="radio" name="buysell"
-								value="sell"> Sell
+								value="buy" checked> Buy <input type="radio"
+								name="buysell" value="sell"> Sell
 
 						</div>
 						<div class="form-group">
@@ -73,24 +73,51 @@
 						</div>
 						<div class="form-group">
 							<label>Transaction Date:</label> <input required type="date"
-								class="form-control" name="transDate" >
+								class="form-control" name="transDate">
 						</div>
 						<div class="form-group">
 							<label>Transaction Time:</label> <input required type="time"
-								class="form-control" name="transTime" >
+								class="form-control" name="transTime">
 						</div>
 						<input class="btn btn-lg btn-primary btn-block" type="submit">
 					</form>
 				</div>
 			</div>
 		</div>
-		<div id="tradeInfo" class="col-md-6"></div>
-	</div>
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">Transaction</div>
+				<div id="tradeInfo"></div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">Download data</div>
+				<div class="panel-body">
+					<input class="btn btn-lg btn-primary btn-block"
+						value="Download all data as a csv file"
+						onClick="window.open('${pageContext.request.contextPath}/getCSV');">
+					<form target="_blank" action="getCSVWithCondition" method="GET"
+						class="form-horizontal" role="form">
+						<div class="form-group">
+							<label for="exampleInputEmail1">Trader id:</label> <input
+								required type="number" min="1" max="50000" class="form-control"
+								placeholder="Enter trader id" name="traderId">
+						</div>
+						<input class="btn btn-lg btn-primary btn-block" type="submit"
+							value="Download aggregation data as a csv file given trader id">
+					</form>
+				</div>
+			</div>
+		</div>
 </body>
 
 </html>
 
 <script type="text/babel">
+$('#getCSVWithCondtionButton').onclick = function(){
+	var traderid = document.getElementById("getCSVWithCondtionTraderId").value;
+	window.open('${pageContext.request.contextPath}/getCSVWithCondition/${traderid}');
+}
+
 var GetTradeButton = React.createClass({
 	 handleClick : function(event) {
     	$.get("http://localhost:8080/VTradeSystem/getTrade", function(result) {
@@ -109,6 +136,5 @@ var GetTradeButton = React.createClass({
     	);
 	  }
 	});
-
 ReactDOM.render(<GetTradeButton/>, document.getElementById("tradeInfo"));
 </script>

@@ -3,6 +3,7 @@ package DB;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -71,9 +72,9 @@ public class Database {
 			String query = "INSERT INTO Transaction"
 					+ "(traderId, symbol, expire_date, action,price,lots,date,time) VALUES"
 					+ "(" + trader + ",\"" + symbol + "\",\"" + exp + "\",\""
-					+ buysell + "\"," + price + ",\"" + lots + "\",\"" + transDate
-					+ "\",\"" + transTime + "\")";
-			System.out.println(query);
+					+ buysell + "\"," + price + ",\""
+					+ ((buysell.compareTo("buy") == 0) ? lots : ("-" + lots))
+					+ "\",\"" + transDate + "\",\"" + transTime + "\")";
 			stmt.executeUpdate(query);
 			return true;
 		} catch (SQLException e) {
@@ -88,10 +89,8 @@ public class Database {
 			connect();
 			stmt = conn.createStatement();
 			String name = "test name";
-			String query = "INSERT INTO Trader"
-					+ "(name, traderId) VALUES" + "(\"" + name + "\","
-					+ trader + ")";
-			System.out.println(query);
+			String query = "INSERT INTO Trader" + "(name, traderId) VALUES"
+					+ "(\"" + name + "\"," + trader + ")";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -107,10 +106,52 @@ public class Database {
 			String query = "INSERT INTO Commodity"
 					+ "(symbol, expire_date) VALUES" + "(\"" + symbol + "\",\""
 					+ exp + "\")";
-			System.out.println(query);
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+		}
+	}
+
+	public static String getTradeCSV() {
+		try {
+			connect();
+			stmt = conn.createStatement();
+			ResultSet rset = stmt
+					.executeQuery("select CONCAT_WS(',', transactionId, traderId, symbol, expire_date,"
+							+ "action, price, lots, date, time) from Transaction");
+			StringBuilder sb = new StringBuilder();
+			sb.append("transactionId, traderId, symbol, expire_date, action, price, lots, date, time\n");
+			while (rset.next()) {
+				sb.append(rset.getString(1));
+				sb.append("\n");
+			}
+			return sb.toString();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
+	public static String getTradeCSVWithCondition(String traderId) {
+		// TODO Auto-generated method stub
+		try {
+			connect();
+			stmt = conn.createStatement();
+			ResultSet rset = stmt
+					.executeQuery("select CONCAT_WS(',', symbol, sum(lots) )"
+							+ "from Transaction " + "where traderId="
+							+ traderId
+							+ " and expire_date > Curdate() group by symbol");
+			StringBuilder sb = new StringBuilder();
+			sb.append("symbol, Lots\n");
+			while (rset.next()) {
+				sb.append(rset.getString(1));
+				sb.append("\n");
+			}
+			return sb.toString();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
 		}
 	}
 }
