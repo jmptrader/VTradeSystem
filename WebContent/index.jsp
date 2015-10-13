@@ -33,58 +33,61 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </head>
 <body>
-	<h2>VTrade System</h2>
-	<div class="row">
-		<div class="col-md-5">
+	<h2 align="center">VTrade System</h2>
+	<div class="container">
+		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">Please input your transaction
 					information below:</div>
 				<div class="panel-body">
-					<form action="addTrade" method="POST" class="form-horizontal"
-						role="form">
-						<div class="form-group">
-							<label for="exampleInputEmail1">Future Symbol:</label> <input
-								required type="text" class="form-control" name="symbol"
-								placeholder="Enter Symbol">
-						</div>
-						<div class="form-group">
-							<label>Contract Expiry:</label> <input required type="date"
-								class="form-control" name="exp" placeholder="Enter expiry date">
-						</div>
-						<div class="form-group">
-							<label>Lots</label> <input required type="number" min="0"
-								max="1000000" step="0.01" class="form-control" name="lots"
-								placeholder="Enter lots">
-						</div>
-						<div class="form-group">
-							<label>Prices</label> <input required type="number" min="0"
-								max="50000" step="0.01" class="form-control" name="price"
-								placeholder="Enter Prices">
-						</div>
-						<div class="form-group">
-							<label>Buy/Sell:</label> <input type="radio" name="buysell"
-								value="buy" checked> Buy <input type="radio"
-								name="buysell" value="sell"> Sell
+					<div class="col-md-12">
+						<form action="addTrade" method="POST" class="form-horizontal"
+							role="form">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Future Symbol:</label> <input
+									required type="text" class="form-control" name="symbol"
+									placeholder="Enter Symbol">
+							</div>
+							<div class="form-group">
+								<label>Contract Expiry:</label> <input required type="date"
+									class="form-control" name="exp" placeholder="Enter expiry date">
+							</div>
+							<div class="form-group">
+								<label>Lots</label> <input required type="number" min="1"
+									max="1000000" step="1" class="form-control" name="lots"
+									placeholder="Enter lots">
+							</div>
+							<div class="form-group">
+								<label>Prices</label> <input required type="number" min="0"
+									max="50000" step="0.01" class="form-control" name="price"
+									placeholder="Enter Prices">
+							</div>
+							<div class="form-group">
+								<label>Buy/Sell:</label> <input type="radio" name="buysell"
+									value="buy" checked> Buy <input type="radio"
+									name="buysell" value="sell"> Sell
 
-						</div>
-						<div class="form-group">
-							<label>Trader</label> <input required type="number"
-								class="form-control" name="trader" placeholder="Enter trader id">
-						</div>
-						<div class="form-group">
-							<label>Transaction Date:</label> <input required type="date"
-								class="form-control" name="transDate">
-						</div>
-						<div class="form-group">
-							<label>Transaction Time:</label> <input required type="time"
-								class="form-control" name="transTime">
-						</div>
-						<input class="btn btn-lg btn-primary btn-block" type="submit">
-					</form>
+							</div>
+							<div class="form-group">
+								<label>Trader</label> <input required type="number"
+									class="form-control" name="trader"
+									placeholder="Enter trader id">
+							</div>
+							<div class="form-group">
+								<label>Transaction Date:</label> <input required type="date"
+									class="form-control" name="transDate">
+							</div>
+							<div class="form-group">
+								<label>Transaction Time:</label> <input required type="time"
+									class="form-control" name="transTime">
+							</div>
+							<input class="btn btn-lg btn-primary btn-block" type="submit">
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-8">
 			<div class="panel panel-default">
 				<div class="panel-heading">Transaction</div>
 				<div id="tradeInfo"></div>
@@ -92,22 +95,25 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">Download data</div>
 				<div class="panel-body">
-					<input class="btn btn-lg btn-primary btn-block"
-						value="Download all data as a csv file"
-						onClick="window.open('${pageContext.request.contextPath}/getCSV');">
-					<form target="_blank" action="getCSVWithCondition" method="GET"
-						class="form-horizontal" role="form">
-						<div class="form-group">
-							<label for="exampleInputEmail1">Trader id:</label> <input
-								required type="number" min="1" max="50000" class="form-control"
-								placeholder="Enter trader id" name="traderId">
-						</div>
-						<input class="btn btn-lg btn-primary btn-block" type="submit"
-							value="Download aggregation data as a csv file given trader id">
-					</form>
+					<div class="col-md-12">
+						<input class="btn btn-lg btn-primary btn-block"
+							value="Download all data as a csv file"
+							onClick="window.open('${pageContext.request.contextPath}/getCSV');">
+						<form target="_blank" action="getCSVWithCondition" method="GET"
+							class="form-horizontal" role="form">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Trader id:</label> <input
+									required type="number" min="1" max="50000" class="form-control"
+									placeholder="Enter trader id" name="traderId">
+							</div>
+							<input class="btn btn-lg btn-primary btn-block" type="submit"
+								value="Download aggregation data as a csv file given trader id">
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
+	</div>
 </body>
 
 </html>
