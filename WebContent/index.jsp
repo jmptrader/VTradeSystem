@@ -120,7 +120,7 @@ $('#getCSVWithCondtionButton').onclick = function(){
 
 var GetTradeButton = React.createClass({
 	 handleClick : function(event) {
-    	$.get("http://localhost:8080/VTradeSystem/getTrade", function(result) {
+    	$.get("getTrade", function(result) {
 	      ReactDOM.render(<Griddle results = {result['test']}/>, document.getElementById("tradeInfo"));
      	});
   	 },
