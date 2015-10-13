@@ -13,15 +13,32 @@ import org.json.JSONObject;
 
 import util.JSONUtil;
 
+/***
+ * This connection handle the communication with database. This include create
+ * and close connection, as well as construct query and send query to database
+ * 
+ * @author zeweijiang
+ *
+ */
 public class Database {
 	static String jdbcUrl = "jdbc:mysql://cs4111.cf7twhrk80xs.us-west-2.rds.amazonaws.com:3306/V_Trade";
 	static Connection conn = null;
 	private static Statement stmt;
 
+	/**
+	 * This is a constructor
+	 * 
+	 * @throws SQLException
+	 */
 	public Database() throws SQLException {
 		connect();
 	}
 
+	/**
+	 * This function create a connection to database
+	 * 
+	 * @throws SQLException
+	 */
 	public static void connect() throws SQLException {
 		if (conn != null)
 			return;
@@ -36,6 +53,9 @@ public class Database {
 		conn = DriverManager.getConnection(jdbcUrl, userid, password);
 	}
 
+	/**
+	 * Close the connection to database
+	 */
 	public static void close() {
 		if (conn != null) {
 			try {
@@ -45,6 +65,11 @@ public class Database {
 		}
 	}
 
+	/**
+	 * Get all the transaction data as json format
+	 * 
+	 * @return return data in json format
+	 */
 	public static JSONObject getTrade() {
 		try {
 			connect();
@@ -59,6 +84,22 @@ public class Database {
 		}
 	}
 
+	/**
+	 * Add a new transaction
+	 * 
+	 * @param symbol
+	 * @param exp
+	 *            : expire date of this future
+	 * @param lots
+	 * @param price
+	 * @param buysell
+	 *            : buy or sell
+	 * @param trader
+	 *            : trader id
+	 * @param transDate
+	 * @param transTime
+	 * @return true if record add successfully
+	 */
 	public static boolean addTrade(String symbol, String exp, String lots,
 			String price, String buysell, String trader, String transDate,
 			String transTime) {
@@ -83,6 +124,12 @@ public class Database {
 		}
 	}
 
+	/**
+	 * Add a trader to trader table
+	 * 
+	 * @param trader
+	 *            : trader id
+	 */
 	private static void addTrader(String trader) {
 		// TODO Auto-generated method stub
 		try {
@@ -97,6 +144,13 @@ public class Database {
 		}
 	}
 
+	/**
+	 * Add a commodity to Commodity table
+	 * 
+	 * @param symbol
+	 * @param exp
+	 *            : expire date of future
+	 */
 	private static void addCommodity(String symbol, String exp) {
 		// TODO Auto-generated method stub
 		try {
@@ -112,6 +166,12 @@ public class Database {
 		}
 	}
 
+	/**
+	 * Get all the transaction from database and return in as a csv format
+	 * string
+	 * 
+	 * @return csv format string
+	 */
 	public static String getTradeCSV() {
 		try {
 			connect();
@@ -132,18 +192,25 @@ public class Database {
 		}
 	}
 
+	/**
+	 * Get aggregation transaction data given trader id.
+	 * 
+	 * @param traderId
+	 * @return un-expired transaction data for the given trader id group by
+	 *         symbol
+	 */
 	public static String getTradeCSVWithCondition(String traderId) {
 		// TODO Auto-generated method stub
 		try {
 			connect();
 			stmt = conn.createStatement();
 			ResultSet rset = stmt
-					.executeQuery("select CONCAT_WS(',', symbol, sum(lots) )"
-							+ "from Transaction " + "where traderId="
+					.executeQuery("select CONCAT_WS(',', symbol, expire_date,sum(lots) )"
+							+ " from Transaction " + "where traderId="
 							+ traderId
-							+ " and expire_date > Curdate() group by symbol");
+							+ " group by symbol, expire_date");
 			StringBuilder sb = new StringBuilder();
-			sb.append("symbol, Lots\n");
+			sb.append("symbol, expire_date, Lots\n");
 			while (rset.next()) {
 				sb.append(rset.getString(1));
 				sb.append("\n");

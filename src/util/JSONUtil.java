@@ -7,8 +7,19 @@ import org.json.JSONException;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-
+/***
+ * This class help process sql result
+ * @author Internet
+ *
+ */
 public class JSONUtil {
+	/**
+	 * Given sql result set and transfer it to json array
+	 * @param rs
+	 * @return result date in json format
+	 * @throws SQLException
+	 * @throws JSONException
+	 */
 	public static JSONArray convert(ResultSet rs) throws SQLException,
 			JSONException {
 		JSONArray json = new JSONArray();
