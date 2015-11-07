@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.8" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true">  
-  <class id="1" language="java" name="controller.addTrade" project="VTradeSystem" 
-    file="/VTradeSystem/src/controller/addTrade.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="1" language="java" name="bookSystem.addTrade" project="VTradeSystem" 
+    file="/VTradeSystem/src/bookSystem/addTrade.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="285" y="191"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -10,8 +10,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="controller.getCSV" project="VTradeSystem" 
-    file="/VTradeSystem/src/controller/getCSV.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="2" language="java" name="bookSystem.getCSV" project="VTradeSystem" 
+    file="/VTradeSystem/src/bookSystem/getCSV.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="138" width="323" x="126" y="281"/>    
     <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -19,8 +19,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="controller.getCSVWithCondition" project="VTradeSystem" 
-    file="/VTradeSystem/src/controller/getCSVWithCondition.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="3" language="java" name="bookSystem.getCSVWithCondition" project="VTradeSystem" 
+    file="/VTradeSystem/src/bookSystem/getCSVWithCondition.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="286" y="513"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -28,8 +28,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="controller.getTrade" project="VTradeSystem" 
-    file="/VTradeSystem/src/controller/getTrade.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="4" language="java" name="bookSystem.getTrade" project="VTradeSystem" 
+    file="/VTradeSystem/src/bookSystem/getTrade.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="288" y="26"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      

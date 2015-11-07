@@ -1,7 +1,6 @@
-package controller;
+package bookSystem;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,16 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 import DB.Database;
 
 /**
- * Servlet implementation class getCSVWithCondition
+ * Servlet implementation class addTrade
  */
-@WebServlet("/getCSVWithCondition")
-public class getCSVWithCondition extends HttpServlet {
+@WebServlet("/addTrade")
+public class addTrade extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public getCSVWithCondition() {
+    public addTrade() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,20 +30,6 @@ public class getCSVWithCondition extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String paramValue = request.getParameter("traderId");
-		String result = Database.getTradeCSVWithCondition(paramValue);
-		response.setContentType("text/csv");
-		response.setHeader("Content-Disposition",
-				"attachment; filename=\"resultGivenTraderId.csv\"");
-		try {
-			OutputStream outputStream = response.getOutputStream();
-			outputStream.write(result.getBytes());
-			outputStream.flush();
-			outputStream.close();
-		} catch (Exception e) {
-			System.out.println(e.toString());
-		}
-		
 	}
 
 	/**
@@ -52,6 +37,16 @@ public class getCSVWithCondition extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		if (Database.addTrade(request.getParameter("symbol"),
+				request.getParameter("exp"),
+				request.getParameter("lots"),
+				request.getParameter("price"),
+				request.getParameter("buysell"),
+				request.getParameter("trader"),
+				request.getParameter("transDate"),
+				request.getParameter("transTime"))) {
+			response.sendRedirect(request.getContextPath());
+		} 
 	}
 
 }
