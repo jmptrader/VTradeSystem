@@ -164,7 +164,8 @@ var columnData =[
   {
     "columnName": "price",
     "order": 6,
-    "displayName": "Price"
+    "displayName": "Price",
+	"customComponent": Price_custom,
   },
   {
     "columnName": "orderType",
@@ -182,6 +183,17 @@ var columnData =[
     "displayName": "Time"
   }
 ];
+
+var Price_custom = React.createClass({
+  render: function(){
+	if (this.props.data < 0 ) {
+		return <div>{-this.props.data}</div>
+	} else {
+		return <div>{this.props.data}</div>
+	}
+  }
+});
+
 var GetTradeButton = React.createClass({
 	 handleClick : function(event) {
     	$.get("getTrade", function(result) {
