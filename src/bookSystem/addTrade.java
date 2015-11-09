@@ -16,37 +16,39 @@ import DB.Database;
 @WebServlet("/addTrade")
 public class addTrade extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public addTrade() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public addTrade() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		if (Database.addTrade(request.getParameter("symbol"),
-				request.getParameter("exp"),
-				request.getParameter("lots"),
-				request.getParameter("price"),
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		if (Database.addTrade(request.getParameter("orderType"),
+				request.getParameter("symbol"), request.getParameter("exp"),
+				request.getParameter("lots"), request.getParameter("price"),
 				request.getParameter("buysell"),
 				request.getParameter("trader"),
 				request.getParameter("transDate"),
 				request.getParameter("transTime"))) {
 			response.sendRedirect(request.getContextPath());
-		} 
+		}
 	}
 
 }
