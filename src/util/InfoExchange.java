@@ -2,9 +2,9 @@ package util;
 import java.util.HashMap;
 
 public class InfoExchange {
-	String limitOrder = "35=%s^A34=1^A49=%d^A52=%s^A56=EXCHANGE^A11=%d^A54=%d^A38=%d^A44=%f^A55=%s^A40=%s^A59=%s^A47=A^A60=%s^A21=1^A167=FUT^A200=%s^A205=%s^A207=Test^A18=%s^A10=101^A";
-	String exeInfo = "";
-	String ACK = "";
+	private static String fixOrder = "35=%s^A34=1^A49=%d^A52=%s^A56=EXCHANGE^A11=%d^A54=%d^A38=%d^A44=%f^A55=%s^A40=%s^A59=%s^A47=A^A60=%s^A21=1^A167=FUT^A200=%s^A205=%s^A207=Test^A18=%s^A10=101^A";
+	private static String fixExeInfo = "";
+	private static String fixACK = "";
 	private static final HashMap<String,Integer> map;
 	static{
 		map = new HashMap<String,Integer>();
@@ -28,7 +28,7 @@ public class InfoExchange {
 
 	}
 	
-	public String orderDeparser(Order order){
+	public static String orderDeparser(Order order){
 	int SenderCompID = order.SenderCompID;
         String SendingTime = order.SendingTime;
         double Price = order.Price;
@@ -43,7 +43,7 @@ public class InfoExchange {
         String MsgType = order.MsgType;
         int ClOrdID = order.ClOrdID;
         String ExecInst = order.ExecInst;
-        String fixOrderBody = String.format(limitOrder,
+        String fixOrderBody = String.format(fixOrder,
         		MsgType,SenderCompID,SendingTime,ClOrdID,Side,OrderQty,Price,Symbol,OrderType,TimeInForce,TransacTime,MaturityMonthYear,MaturityDay,ExecInst);
 
         int len = fixOrderBody.length();
@@ -51,7 +51,7 @@ public class InfoExchange {
         return prefix+fixOrderBody;
 	}
 	
-	public Order orderParser(String fixMsg){
+	public static Order orderParser(String fixMsg){
 		String[] orderInfo = fixMsg.split("\\^A");
         Order order = new Order();
         HashMap<Integer, String> orderMap = new HashMap<Integer, String>();
