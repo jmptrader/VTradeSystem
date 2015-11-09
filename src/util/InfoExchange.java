@@ -28,8 +28,8 @@ public class InfoExchange {
 
 	}
 	
-	public String orderParser(Order order){
-		int SenderCompID = order.SenderCompID;
+	public String orderDeparser(Order order){
+	int SenderCompID = order.SenderCompID;
         String SendingTime = order.SendingTime;
         double Price = order.Price;
         int Side = order.Side;
@@ -51,7 +51,7 @@ public class InfoExchange {
         return prefix+fixOrderBody;
 	}
 	
-	public Order orderDeparser(String fixMsg){
+	public Order orderParser(String fixMsg){
 		String[] orderInfo = fixMsg.split("\\^A");
         Order order = new Order();
         HashMap<Integer, String> orderMap = new HashMap<Integer, String>();

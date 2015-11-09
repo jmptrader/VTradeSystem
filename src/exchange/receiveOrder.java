@@ -8,6 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import exchange.OrderExecutor;
+import util.ACK;
+import util.InfoExchange;
+import util.Order;
 import util.RequestHelper;
 
 /**
@@ -34,9 +38,15 @@ public class receiveOrder extends HttpServlet {
 		if (request.getParameter("data") == null)
 			return;
 		String fixMessage = request.getParameter("data");
-		/*
-		 * Order newOrder = InfoExchange.parse(fixMessage);
-		 */
+		
+		InfoExchange info = new InfoExchange();
+				
+		Order order = info.orderParser(fixMessage);
+		OrderExecutor oe = OrderExecutor.getInstance();
+		ACK ack = new ACK(order, OrderExecutor.getExchangeDate().toString(), ++oe.exeCounter);
+
+		// String ackMessage = info.ackDeparser(ack);
+		 
 		try {
 			RequestHelper.sendPost("http://localhost:8080/VTradeSystem/getACK",
 					"this is an ack from: " + fixMessage);
