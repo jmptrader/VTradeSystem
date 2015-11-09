@@ -23,7 +23,7 @@ public class InfoExchange {
 		map.put("ExecInst", 18);
 	}
 	
-	public String orderParser(Order order){
+	public String orderDeparser(Order order){
 		int SenderCompID = order.SenderCompID;
         String SendingTime = order.SendingTime;
         double Price = order.Price;
@@ -46,7 +46,7 @@ public class InfoExchange {
         return prefix+fixLimitOrderBody;
 	}
 	
-	public Order orderDeparser(String fixMsg){
+	public Order orderParser(String fixMsg){
 		String[] orderInfo = fixMsg.split("\\^A");
         Order order = new Order();
         HashMap<Integer, String> orderMap = new HashMap<Integer, String>();
