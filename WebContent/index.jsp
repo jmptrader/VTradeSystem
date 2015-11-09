@@ -95,7 +95,7 @@
 		</div>
 		<div class="col-md-8">
 			<div class="panel panel-default">
-				<div class="panel-heading">Transaction</div>
+				<div class="panel-heading">Orders</div>
 				<div id="tradeInfo"></div>
 			</div>
 			<div class="panel panel-default">
@@ -130,6 +130,17 @@ $('#getCSVWithCondtionButton').onclick = function(){
 	window.open('${pageContext.request.contextPath}/getCSVWithCondition/${traderid}');
 }
 
+
+var Lots_custom = React.createClass({
+  render: function(){
+	if (this.props.data < 0 ) {
+		return <div>{-this.props.data}</div>
+	} else {
+		return <div>{this.props.data}</div>
+	}
+  }
+});
+
 var columnData =[
 {
     "columnName": "transactionId",
@@ -159,13 +170,13 @@ var columnData =[
   {
     "columnName": "lots",
     "order": 5,
-    "displayName": "Lots"
+    "displayName": "Lots",
+	"customComponent": Lots_custom,
   },
   {
     "columnName": "price",
     "order": 6,
     "displayName": "Price",
-	"customComponent": Price_custom,
   },
   {
     "columnName": "orderType",
@@ -183,16 +194,6 @@ var columnData =[
     "displayName": "Time"
   }
 ];
-
-var Price_custom = React.createClass({
-  render: function(){
-	if (this.props.data < 0 ) {
-		return <div>{-this.props.data}</div>
-	} else {
-		return <div>{this.props.data}</div>
-	}
-  }
-});
 
 var GetTradeButton = React.createClass({
 	 handleClick : function(event) {
