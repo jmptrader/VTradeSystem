@@ -16,32 +16,41 @@ import java.util.List;
 import java.util.Random;
 
 /**
+ * The class design of order executor.
+ * 
+ * It takes an order, and according to the order type, side, price
+ * and quantity information, returns 1 or 2 exeReports for that order 
+ * as well as ACK message.
+ * 
+ * # The prob. over FF and PF is as follows
+ * 					Full-Fill		Partial-Fill(up to 2 fills)
+ * market order:   	 1					0
+ * limited order:	1/2					1/2
+ * pegged order:	1/2					1/2
+ * 
+ * Another random mechanism is guaranteed exe price within reasonable range for 
+ * market, limited and pegged orders.
+ *    
  * @author pennlio
  *
  */
 public class OrderExecutor {
 	public int exeCounter = 0;
-	private static Date exchangeDate = new Date();
+	private Date exchangeDate = new Date();
 	private static int RANDOM_NUMBER_BOUND = 100;
 	private static int FULL_FILL_THRESHOLD = 50;
-	private static double MAX_EXE_PRICE = 30.00f;
+	private static double MAX_EXE_PRICE = 50.00f;
+	private static double MIN_EXE_PRICE = 10.00f;
 
-	public static Date getExchangeDate() {
-		return exchangeDate;
-	}
-
-	public static void setExchangeDate(Date exchangeDate) {
-		OrderExecutor.exchangeDate = exchangeDate;
-	}
-
-
-	private static double MIN_EXE_PRICE = 5.00f;
 	private static OrderExecutor instance = null; //singleton
 	
 	protected OrderExecutor() {
-	      // Exists only to defeat instantiation.
+		// Exists only to defeat instantiation.
 	}
-	
+	/**
+	 * Singleton constructor of OrderExecutor. 
+	 * @return The instance of OrderExecutor.
+	 */
 	public static OrderExecutor getInstance(){
 		if(instance == null){
 			instance = new OrderExecutor();
@@ -49,92 +58,81 @@ public class OrderExecutor {
 		return instance;
 	}
 	
-//	private float exPriceGenerator(Order order){
-	public double generateExePrice(double maxPrice, double minPrice){
-		// return according to order type
+	public Date getExchangeDate() {
+		return instance.exchangeDate;
+	}
+	
+	public void setExchangeDate(Date exchangeDate) {
+		instance.exchangeDate = exchangeDate;
+	}
+	/**
+	 * Generate reasonable execution price according to order type.
+	 * @param order
+	 * @return
+	 */
+	protected double generateExePrice(Order order){
+		String orderType = order.getOrderType();
 		Random rand = new Random();
-		double exePrice = (maxPrice - minPrice) * rand.nextFloat() + minPrice;
+		double exePrice;
+		if (orderType.equals("1") || orderType.equals("p")){
+			exePrice = (MAX_EXE_PRICE - MIN_EXE_PRICE) * rand.nextFloat() + MIN_EXE_PRICE;
+		}
+		else{
+			if (order.getSide() == 1){ // limited buy order
+				exePrice = (order.getPrice() - MIN_EXE_PRICE) * rand.nextFloat() + MIN_EXE_PRICE;
+			}
+			else{  //limited sell order
+				exePrice = (MAX_EXE_PRICE - order.getPrice()) * rand.nextFloat() + order.getPrice();
+			}
+		}
 		return exePrice;
 	}
 	
-	
-	// reutrn according to order type
+	/**
+	 * Generate execution report for this order.
+	 * @param order: input order.
+	 * @return List of execution reports.
+	 */
 	public List<ExeReport> generateExeReport(Order order){
-		List<ExeReport> exReportList = new ArrayList();
-		List<Integer> exAmountList = new ArrayList();
+		List<ExeReport> exReportList = new ArrayList<ExeReport>();
 		Random rand = new Random();
 		int randomIndex = rand.nextInt(RANDOM_NUMBER_BOUND);
 		boolean doFullFill = false;
-		
 		if (order.getOrderType().equals("1") || randomIndex > FULL_FILL_THRESHOLD){
-			//for market order, full fill or full fill randomly for other orders
+			//for market order, do full fill; for others , do full fill randomly
 			doFullFill = true;
 		}
 		if (doFullFill){
-			ExeReport exeReport = new ExeReport(order);
-			double exeAvgPrice = this.generateExePrice(MAX_EXE_PRICE, MIN_EXE_PRICE);
-			exeReport.setLastPx(exeAvgPrice);
-			exeReport.setAvgPx(exeAvgPrice);
-			exeReport.setCumQty(order.getOrderQty());
-			exeReport.setLastShares(order.getOrderQty());
-			exeReport.setOrdStatus(2);
-			exeReport.setExecType(2);
-			exeReport.setLeavesQty(0);
-			// for ack part
-			exeReport.setExecID(++exeCounter);
-			exeReport.setOrderID(order.getClOrdID());
-			exReportList.add(exeReport);
+			double exePrice = this.generateExePrice(order);
+			ExeReport curReport = new ExeReport(order, ++exeCounter, exePrice);
+			exReportList.add(curReport);
 		}
 		else{			
-			// partial fill with up to 2 fills
+			// partial order will be filled up to 2 times.
 			int leaveQty = order.getOrderQty();
 			while (leaveQty > 0){
 				if (doFullFill){
-					exAmountList.add(leaveQty); // 
+					double exePrice = this.generateExePrice(order);
+					ExeReport lastReport = exReportList.get(0);
+					double avgPrice = (lastReport.getLastPx()*lastReport.getLastShares() 
+								+ exePrice*leaveQty)/order.getOrderQty(); 
+					ExeReport curReport = new ExeReport(order, ++exeCounter, exePrice, avgPrice, 
+								leaveQty, order.getOrderQty());
+					exReportList.add(curReport);
 					break;
 				}
 				else{
-					int threshold = rand.nextInt(RANDOM_NUMBER_BOUND);
-					if(threshold > FULL_FILL_THRESHOLD){
-						exAmountList.add(leaveQty); // full fill at once
-						break;
-					}
-					else{
-						int firstExeAmount = rand.nextInt(order.getOrderQty()-1); // firstExeAmount < OrderQty
-						exAmountList.add(firstExeAmount);
-						leaveQty -= firstExeAmount;
-						doFullFill = true;  // 2nd fill must be full fill
-					}
+					int firstExeQty = rand.nextInt(order.getOrderQty()-1); 
+					leaveQty -= firstExeQty;
+					double exePrice = this.generateExePrice(order);
+					ExeReport curReport = new ExeReport(order, ++exeCounter, exePrice, exePrice, firstExeQty, firstExeQty);
+					exReportList.add(curReport);
+					// 2nd fill must be full fill
+					doFullFill = true;  
 				}
 			}			
 		}
 		return exReportList;
 	}
-	
-//	public ACK(Order currentOrder){
-//		ACK newAck = new ACK(exchangeDate.toString(), ++exeCounter, currentOrder.getClOrdID());
-//		return newAck;
-//	}
-	
-//	public void processOrder(String orderString){
-//		// parse ordering string
-//		InfoExchange parser = new InfoExchange();
-//		Order currentOrder = parser.orderParser(orderString); //todo
-//		List<>
-//		
-//
-//		
-//		while (leftAmount > 0){ 
-//			float exePrice = this.exPriceGenerator(maxPrice, minPrice);
-//			int exAmount = this.exAmountGenerator(currentOrder, isPartialFill);
-//			ExeInfo excutedOrderInfo = new ExeInfo(...); // todo
-//			leftAmount -= exAmount;
-//			if (leftAmount > 0){
-//				isPartialFill = 1;
-//			}
-//		}
-//		return;
-//	}
-	
 	
 }

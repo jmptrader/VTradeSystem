@@ -1,7 +1,8 @@
 package util;
 
 /**
- * Class for ACK message.
+ * Class for ACK message. 
+ * Both the ExeReport and ACK are inherited from Order class.
  * @author pennlio
  *
  */
@@ -66,14 +67,25 @@ public class ACK extends Order{
 	 * Amount of shares open for further execution. Value= tag 38 OrdQty.
 	 */
 	int leavesQty;
-
-	public ACK(Order order){
+	
+	/**
+	 * General constructor for ACK class.
+	 * @param order
+	 */
+	protected ACK(Order order){
 		// common fields for all ACK
 		super();
 		this.MsgType = "8"; 
 		this.lastMk = "Test"; 
 		this.execTransType = 0;
 	}
+	
+	/**
+	 * Default class for ACK message.
+	 * @param order
+	 * @param sendingTime
+	 * @param execID
+	 */
 	
 	public ACK (Order order, String sendingTime, int execID){
 		this(order); // call default constructor.
