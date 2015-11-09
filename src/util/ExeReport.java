@@ -15,8 +15,8 @@ public class ExeReport extends ACK {
 	 */
 	int lastCapacity;
 	
-	public ExeReport() {
-		super();
+	public ExeReport(Order order) {
+		super(order);
 		this.lastCapacity = 1; // for agent
 	}
 

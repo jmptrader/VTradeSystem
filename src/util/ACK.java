@@ -5,18 +5,8 @@ package util;
  * @author pennlio
  *
  */
-public class ACK {
-	/**
-	 * Sending time should be a little bit later than
-	 *  this report’s transaction.
-	 */
-	String sendingTime;
-	
-	/**
-	 * MsgType’s value from D to 8, value 8 means execution report.
-	 */
-	String msgType;
-	
+public class ACK extends Order{
+
 	/**
 	 * Calculated average price of all fills on this order, 0 for ack.
 	 */
@@ -77,18 +67,19 @@ public class ACK {
 	 */
 	int leavesQty;
 
-	public ACK(){
+	public ACK(Order order){
 		// common fields for all ACK
-		this.msgType = "8"; 
+		super();
+		this.MsgType = "8"; 
 		this.lastMk = "Test"; 
 		this.execTransType = 0;
 	}
 	
-	public ACK (String sendingTime, int execID, int orderID){
-		this(); // call default constructor.
-		this.sendingTime = sendingTime;
+	public ACK (Order order, String sendingTime, int execID){
+		this(order); // call default constructor.
+		this.SendingTime = sendingTime;
 		this.execID = execID;
-		this.orderID = orderID;
+		this.orderID = order.getClOrdID();
 		this.avgPx = 0.00f;
 		this.cumQty = 0;
 		this.lastPx = 0.00f;

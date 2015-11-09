@@ -20,11 +20,21 @@ import java.util.Random;
  *
  */
 public class OrderExecutor {
-	private int exeCounter = 0;
+	public int exeCounter = 0;
 	private static Date exchangeDate = new Date();
 	private static int RANDOM_NUMBER_BOUND = 100;
 	private static int FULL_FILL_THRESHOLD = 50;
 	private static double MAX_EXE_PRICE = 30.00f;
+
+	public static Date getExchangeDate() {
+		return exchangeDate;
+	}
+
+	public static void setExchangeDate(Date exchangeDate) {
+		OrderExecutor.exchangeDate = exchangeDate;
+	}
+
+
 	private static double MIN_EXE_PRICE = 5.00f;
 	private static OrderExecutor instance = null; //singleton
 	
@@ -52,10 +62,16 @@ public class OrderExecutor {
 	public List<ExeReport> generateExeReport(Order order){
 		List<ExeReport> exReportList = new ArrayList();
 		List<Integer> exAmountList = new ArrayList();
+		Random rand = new Random();
+		int randomIndex = rand.nextInt(RANDOM_NUMBER_BOUND);
+		boolean doFullFill = false;
 		
-		if (order.getOrderType().equals("1")){  // market order
-			//for market order, full fill
-			ExeReport exeReport = new ExeReport();
+		if (order.getOrderType().equals("1") || randomIndex > FULL_FILL_THRESHOLD){
+			//for market order, full fill or full fill randomly for other orders
+			doFullFill = true;
+		}
+		if (doFullFill){
+			ExeReport exeReport = new ExeReport(order);
 			double exeAvgPrice = this.generateExePrice(MAX_EXE_PRICE, MIN_EXE_PRICE);
 			exeReport.setLastPx(exeAvgPrice);
 			exeReport.setAvgPx(exeAvgPrice);
@@ -69,13 +85,11 @@ public class OrderExecutor {
 			exeReport.setOrderID(order.getClOrdID());
 			exReportList.add(exeReport);
 		}
-		else{							
-			//for limited and pegged order,  full fill order amount up to 2 executions.
+		else{			
+			// partial fill with up to 2 fills
 			int leaveQty = order.getOrderQty();
-			boolean isSecondExecution = false;
-			Random rand = new Random();
 			while (leaveQty > 0){
-				if (isSecondExecution){
+				if (doFullFill){
 					exAmountList.add(leaveQty); // 
 					break;
 				}
@@ -89,7 +103,7 @@ public class OrderExecutor {
 						int firstExeAmount = rand.nextInt(order.getOrderQty()-1); // firstExeAmount < OrderQty
 						exAmountList.add(firstExeAmount);
 						leaveQty -= firstExeAmount;
-						isSecondExecution = true;
+						doFullFill = true;  // 2nd fill must be full fill
 					}
 				}
 			}			
@@ -97,10 +111,10 @@ public class OrderExecutor {
 		return exReportList;
 	}
 	
-	public ACK generateACKMessage(Order currentOrder){
-		ACK newAck = new ACK(exchangeDate.toString(), ++exeCounter, currentOrder.getClOrdID());
-		return newAck;
-	}
+//	public ACK(Order currentOrder){
+//		ACK newAck = new ACK(exchangeDate.toString(), ++exeCounter, currentOrder.getClOrdID());
+//		return newAck;
+//	}
 	
 //	public void processOrder(String orderString){
 //		// parse ordering string
