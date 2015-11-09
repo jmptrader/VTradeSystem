@@ -41,10 +41,8 @@ public class receiveOrder extends HttpServlet {
 		if (request.getParameter("data") == null)
 			return;
 		String fixMessage = request.getParameter("data");
-		
-		InfoExchange info = new InfoExchange();
 				
-		Order order = info.orderParser(fixMessage);
+		Order order = InfoExchange.orderParser(fixMessage);
 		
 		ACK ack = new ACK(order, orderExecutor.getExchangeDate().toString(), ++orderExecutor.exeCounter);
 		List<ExeReport> exeReports = orderExecutor.generateExeReport(order);
