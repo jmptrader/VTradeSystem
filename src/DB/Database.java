@@ -21,7 +21,9 @@ import util.JSONUtil;
  *
  */
 public class Database {
-	static String jdbcUrl = "jdbc:mysql://cs4111.cf7twhrk80xs.us-west-2.rds.amazonaws.com:3306/V_Trade";
+	// static String jdbcUrl =
+	// "jdbc:mysql://cs4111.cf7twhrk80xs.us-west-2.rds.amazonaws.com:3306/V_Trade";
+	static String jdbcUrl = "jdbc:mysql://localhost:8889/vtrade";
 	static Connection conn = null;
 	private static Statement stmt;
 
@@ -40,16 +42,19 @@ public class Database {
 	 * @throws SQLException
 	 */
 	public static void connect() throws SQLException {
-		if (conn != null)
-			return;
+		if (conn != null) {
+			conn.close();
+		}
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String userid = "sd2810";
-		String password = "26842810";
+		// String userid = "sd2810";
+		// String password = "26842810";
+		String userid = "root";
+		String password = "root";
 		conn = DriverManager.getConnection(jdbcUrl, userid, password);
 	}
 
@@ -100,9 +105,9 @@ public class Database {
 	 * @param transTime
 	 * @return true if record add successfully
 	 */
-	public static boolean addTrade(String symbol, String exp, String lots,
-			String price, String buysell, String trader, String transDate,
-			String transTime) {
+	public static boolean addTrade(String orderType, String symbol, String exp,
+			String lots, String price, String buysell, String trader,
+			String transDate, String transTime) {
 		try {
 			connect();
 			stmt = conn.createStatement();
@@ -111,9 +116,9 @@ public class Database {
 			addTrader(trader);
 
 			String query = "INSERT INTO Transaction"
-					+ "(traderId, symbol, expire_date, action,price,lots,date,time) VALUES"
-					+ "(" + trader + ",\"" + symbol + "\",\"" + exp + "\",\""
-					+ buysell + "\"," + price + ",\""
+					+ "(orderType, traderId, symbol, expire_date, action,price,lots,date,time) VALUES"
+					+ "(\"" + orderType + "\"," + trader + ",\"" + symbol
+					+ "\",\"" + exp + "\",\"" + buysell + "\"," + price + ",\""
 					+ ((buysell.compareTo("buy") == 0) ? lots : ("-" + lots))
 					+ "\",\"" + transDate + "\",\"" + transTime + "\")";
 			stmt.executeUpdate(query);
@@ -206,9 +211,9 @@ public class Database {
 			stmt = conn.createStatement();
 			ResultSet rset = stmt
 					.executeQuery("select CONCAT_WS(',', symbol, expire_date,sum(lots) )"
-							+ " from Transaction " + "where traderId="
-							+ traderId
-							+ " group by symbol, expire_date");
+							+ " from Transaction "
+							+ "where traderId="
+							+ traderId + " group by symbol, expire_date");
 			StringBuilder sb = new StringBuilder();
 			sb.append("symbol, expire_date, Lots\n");
 			while (rset.next()) {

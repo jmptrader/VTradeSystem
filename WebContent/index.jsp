@@ -44,6 +44,12 @@
 						<form action="addTrade" method="POST" class="form-horizontal"
 							role="form">
 							<div class="form-group">
+								<label>Order Type: </label> <input type="radio" name="orderType"
+									value="Market" checked> Market <input type="radio"
+									name="orderType" value="Limit"> Limit <input
+									type="radio" name="orderType" value="Pegged"> Pegged
+							</div>
+							<div class="form-group">
 								<label for="exampleInputEmail1">Future Symbol:</label> <input
 									required type="text" class="form-control" name="symbol"
 									placeholder="Enter Symbol">
@@ -89,7 +95,7 @@
 		</div>
 		<div class="col-md-8">
 			<div class="panel panel-default">
-				<div class="panel-heading">Transaction</div>
+				<div class="panel-heading">Orders</div>
 				<div id="tradeInfo"></div>
 			</div>
 			<div class="panel panel-default">
@@ -124,10 +130,75 @@ $('#getCSVWithCondtionButton').onclick = function(){
 	window.open('${pageContext.request.contextPath}/getCSVWithCondition/${traderid}');
 }
 
+
+var Lots_custom = React.createClass({
+  render: function(){
+	if (this.props.data < 0 ) {
+		return <div>{-this.props.data}</div>
+	} else {
+		return <div>{this.props.data}</div>
+	}
+  }
+});
+
+var columnData =[
+{
+    "columnName": "transactionId",
+    "order": 0,
+    "displayName": "Order_id"
+  },
+  {
+    "columnName": "traderId",
+    "order": 1,
+    "displayName": "Trader_id"
+  },
+  {
+    "columnName": "action",
+    "order": 2,
+    "displayName": "Buy/Sell"
+  },
+  {
+    "columnName": "symbol",
+    "order": 3,
+    "displayName": "Symbol"
+  },
+  {
+    "columnName": "expire_date",
+    "order": 4,
+    "displayName": "Expire"
+  },
+  {
+    "columnName": "lots",
+    "order": 5,
+    "displayName": "Lots",
+	"customComponent": Lots_custom,
+  },
+  {
+    "columnName": "price",
+    "order": 6,
+    "displayName": "Price",
+  },
+  {
+    "columnName": "orderType",
+    "order": 7,
+    "displayName": "OrderType"
+  },
+  {
+    "columnName": "date",
+    "order": 8,
+    "displayName": "Date"
+  },
+  {
+    "columnName": "time",
+    "order": 9,
+    "displayName": "Time"
+  }
+];
+
 var GetTradeButton = React.createClass({
 	 handleClick : function(event) {
     	$.get("getTrade", function(result) {
-	      ReactDOM.render(<Griddle results = {result['test']}/>, document.getElementById("tradeInfo"));
+	      ReactDOM.render(<Griddle columnMetadata={columnData} results = {result['test']}/>, document.getElementById("tradeInfo"));
      	});
   	 },
 
