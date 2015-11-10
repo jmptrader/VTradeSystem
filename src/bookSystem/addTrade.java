@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import util.InfoExchange;
+import util.Order;
+import util.RequestHelper;
 import DB.Database;
 
 /**
@@ -49,13 +52,54 @@ public class addTrade extends HttpServlet {
 		String day = df.format(date);
 		DateFormat tf = new SimpleDateFormat("HH:mm:ss");
 		String time = tf.format(date);
-		if (Database.addTrade(request.getParameter("orderType"),
+		Integer ClOrdID = Database.addTrade(request.getParameter("orderType"),
 				request.getParameter("symbol"), request.getParameter("exp"),
 				request.getParameter("lots"), request.getParameter("price"),
 				request.getParameter("buysell"),
-				request.getParameter("trader"), day, time)) {
+				request.getParameter("trader"), day, time);
+		if (ClOrdID < 0) {
 			response.sendRedirect(request.getContextPath());
+			return;
 		}
-	}
 
+		int SenderCompID = Integer.parseInt(request.getParameter("trader"));
+		String SendingTime = request.getParameter("exp").substring(0, 4)
+				+ request.getParameter("exp").substring(5, 7)
+				+ request.getParameter("exp").substring(8, 10) + " " + tf;
+		Integer Side = request.getParameter("buysell").compareTo("buy") == 0 ? 1
+				: 2;
+		Integer OrderQty = Integer.parseInt(request.getParameter("lots"));
+		Double Price;
+		String Symbol = request.getParameter("symbol");
+		String OrderType;
+		String TimeInForce = "1";
+		String TransacTime = SendingTime;
+		String MaturityMonthYear = request.getParameter("exp").substring(0, 4)
+				+ request.getParameter("exp").substring(5, 7);
+		String MaturityDay = request.getParameter("exp").substring(8, 10);
+		String ExecInst = "M";
+		if (request.getParameter("orderType").compareTo("market") == 0) {
+			Price = 0.0;
+			OrderType = "1";
+		} else if (request.getParameter("orderType").compareTo("limit") == 0) {
+			Price = Double.parseDouble(request.getParameter("price"));
+			OrderType = "2";
+		} else {
+			Price = Double.parseDouble(request.getParameter("price"));
+			OrderType = "P";
+		}
+
+		Order order = new Order(SenderCompID, SendingTime, ClOrdID, Side,
+				OrderQty, Price, Symbol, OrderType, TimeInForce, TransacTime,
+				MaturityMonthYear, MaturityDay, ExecInst);
+		try {
+			RequestHelper.sendPost(
+					"http://localhost:8080/VTradeSystem/receiveOrder",
+					InfoExchange.orderDeparser(order));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		response.sendRedirect(request.getContextPath());
+	}
 }

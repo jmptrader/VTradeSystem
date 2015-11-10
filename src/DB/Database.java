@@ -105,7 +105,7 @@ public class Database {
 	 * @param transTime
 	 * @return true if record add successfully
 	 */
-	public static boolean addTrade(String orderType, String symbol, String exp,
+	public static int addTrade(String orderType, String symbol, String exp,
 			String lots, String price, String buysell, String trader,
 			String transDate, String transTime) {
 		try {
@@ -121,11 +121,63 @@ public class Database {
 					+ "\",\"" + exp + "\",\"" + buysell + "\"," + price + ",\""
 					+ ((buysell.compareTo("buy") == 0) ? lots : ("-" + lots))
 					+ "\",\"" + transDate + "\",\"" + transTime + "\")";
-			stmt.executeUpdate(query);
-			return true;
+
+			stmt.executeUpdate(query, stmt.RETURN_GENERATED_KEYS);
+			ResultSet rs = stmt.getGeneratedKeys();
+			int generatedKey = 0;
+			if (rs.next()) {
+				generatedKey = rs.getInt(1);
+				return generatedKey;
+			}
+			return -1;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
-			return false;
+			return -1;
+		}
+	}
+
+	/**
+	 * Add a new transaction sent from exchange
+	 * 
+	 * @param orderType
+	 * @param symbol
+	 * @param exp
+	 * @param lots
+	 * @param price
+	 * @param buysell
+	 * @param trader
+	 * @param transDate
+	 * @param transTime
+	 * @return
+	 */
+	public static int addFill(String orderType, String symbol, String exp,
+			String lots, String price, String buysell, String trader,
+			String transDate, String transTime) {
+		try {
+			connect();
+			stmt = conn.createStatement();
+
+			addCommodity(symbol, exp);
+			addTrader(trader);
+
+			String query = "INSERT INTO Transaction"
+					+ "(orderType, traderId, symbol, expire_date, action,price,lots,date,time) VALUES"
+					+ "(\"" + orderType + "\"," + trader + ",\"" + symbol
+					+ "\",\"" + exp + "\",\"" + buysell + "\"," + price + ",\""
+					+ ((buysell.compareTo("buy") == 0) ? lots : ("-" + lots))
+					+ "\",\"" + transDate + "\",\"" + transTime + "\")";
+
+			stmt.executeUpdate(query, stmt.RETURN_GENERATED_KEYS);
+			ResultSet rs = stmt.getGeneratedKeys();
+			int generatedKey = 0;
+			if (rs.next()) {
+				generatedKey = rs.getInt(1);
+				return generatedKey;
+			}
+			return -1;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return -1;
 		}
 	}
 

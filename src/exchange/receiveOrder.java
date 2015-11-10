@@ -39,27 +39,6 @@ public class receiveOrder extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		if (request.getParameter("data") == null)
-			return;
-		String fixMessage = request.getParameter("data");
-				
-		Order order = InfoExchange.orderParser(fixMessage);
-		
-		ACK ack = new ACK(order, LocalDateTime.now().toString(), ++orderExecutor.exeCounter);
-		List<ExeReport> exeReports = orderExecutor.generateExeReport(order);
-		
-		// String reportMessage = info.reportDeparser(ack);
-		// String ackMessage = info.ackDeparser(ack);
-		try {
-			RequestHelper.sendPost("http://localhost:8080/VTradeSystem/getACK",
-					"this is an ack from: " + fixMessage);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		/*
-		 * InfoExchange.getACK(fixMessage)); Exchange.add(newOrder);
-		 */
 	}
 
 	/**
@@ -68,6 +47,28 @@ public class receiveOrder extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		if (request.getParameter("data") == null)
+			return;
+		String fixMessage = request.getParameter("data");
+
+		Order order = InfoExchange.orderParser(fixMessage);
+
+		ACK ack = new ACK(order, LocalDateTime.now().toString(),
+				++orderExecutor.exeCounter);
+		List<ExeReport> exeReports = orderExecutor.generateExeReport(order);
+
+		try {
+			RequestHelper.sendPost("http://localhost:8080/VTradeSystem/getACK",
+					InfoExchange.ACKDeparser(ack));
+			for (ExeReport rep : exeReports) {
+				RequestHelper.sendPost(
+						"http://localhost:8080/VTradeSystem/receiveFill",
+						InfoExchange.ExeReportDeparser(rep));
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
