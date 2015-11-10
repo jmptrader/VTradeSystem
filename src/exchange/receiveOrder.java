@@ -1,6 +1,8 @@
 package exchange;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,6 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import exchange.OrderExecutor;
+import util.ACK;
+import util.ExeReport;
+import util.InfoExchange;
+import util.Order;
 import util.RequestHelper;
 
 /**
@@ -16,6 +23,7 @@ import util.RequestHelper;
 @WebServlet("/receiveOrder")
 public class receiveOrder extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static OrderExecutor orderExecutor = OrderExecutor.getInstance();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -34,9 +42,14 @@ public class receiveOrder extends HttpServlet {
 		if (request.getParameter("data") == null)
 			return;
 		String fixMessage = request.getParameter("data");
-		/*
-		 * Order newOrder = InfoExchange.parse(fixMessage);
-		 */
+				
+		Order order = InfoExchange.orderParser(fixMessage);
+		
+		ACK ack = new ACK(order, LocalDateTime.now().toString(), ++orderExecutor.exeCounter);
+		List<ExeReport> exeReports = orderExecutor.generateExeReport(order);
+		
+		// String reportMessage = info.reportDeparser(ack);
+		// String ackMessage = info.ackDeparser(ack);
 		try {
 			RequestHelper.sendPost("http://localhost:8080/VTradeSystem/getACK",
 					"this is an ack from: " + fixMessage);
