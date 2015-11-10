@@ -79,14 +79,6 @@
 									class="form-control" name="trader"
 									placeholder="Enter trader id">
 							</div>
-							<div class="form-group">
-								<label>Transaction Date:</label> <input required type="date"
-									class="form-control" name="transDate">
-							</div>
-							<div class="form-group">
-								<label>Transaction Time:</label> <input required type="time"
-									class="form-control" name="transTime">
-							</div>
 							<input class="btn btn-lg btn-primary btn-block" type="submit">
 						</form>
 					</div>
