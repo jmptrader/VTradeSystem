@@ -6,7 +6,8 @@ public class Order {
 
 	int SenderCompID;
 	String SendingTime;
-	double Price;
+	//default is 0.0 which stands for market order
+	double Price = 0.0;
 	int Side;
 	String Symbol;
 	String OrderType;
@@ -15,9 +16,28 @@ public class Order {
 	String TransacTime;
 	String MaturityMonthYear;
 	String MaturityDay;
-	String MsgType;
+	String MsgType = "D";
 	int ClOrdID;
 	String ExecInst;
+	public Order(){
+		
+	}
+	public Order(Integer SenderCompID,String SendingTime, Integer ClOrdID, Integer Side,Integer OrderQty, Double Price,String Symbol,String OrderType,String TimeInForce, String TransacTime,String MaturityMonthYear, String MaturityDay, String ExecInst){
+		this.SenderCompID = SenderCompID;
+		this.SendingTime = SendingTime;
+		this.ClOrdID = ClOrdID;
+		this.Side = Side;
+		this.OrderQty =  OrderQty;
+		this.Price = Price;
+		this.Symbol = Symbol;
+		this.OrderType = OrderType;
+		this.TimeInForce = TimeInForce;
+		this.TransacTime = TransacTime;
+		this.MaturityDay = MaturityDay;
+		this.MaturityMonthYear = MaturityMonthYear;
+		this.ExecInst = ExecInst;
+		
+	}
 	
 	public int getSenderCompID() {
 		return SenderCompID;

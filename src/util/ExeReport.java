@@ -23,6 +23,12 @@ public class ExeReport extends ACK {
 	 * @param order
 	 * @param exeCounter
 	 */
+	protected ExeReport(){
+		// fill the common fields
+		super();
+		
+	}
+	
 	protected ExeReport(Order order, int exeCounter){
 		// fill the common fields
 		super(order, LocalTime.now().toString(), exeCounter);

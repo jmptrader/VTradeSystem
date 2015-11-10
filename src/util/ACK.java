@@ -74,6 +74,19 @@ public class ACK extends Order{
      * @param sendingTime
      * @param ExecID
      */
+    public ACK(){
+    	super();
+        this.AvgPx = 0.00f;
+        this.CumQty = 0;
+        this.LastPx = 0.00f;
+        this.LastShares = 0;
+        this.OrdStatus = 0;
+        this.ExecType = 0;
+        this.LeavesQty = 0;
+        this.MsgType = "8"; 
+        this.LastMk = "Test"; 
+        this.ExecTranType = 0;
+    }
     public ACK (Order order, String sendingTime, int ExecID){
     	super();
         this.SendingTime = sendingTime;
