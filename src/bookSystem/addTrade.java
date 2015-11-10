@@ -1,6 +1,10 @@
 package bookSystem;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -40,13 +44,16 @@ public class addTrade extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		Date date = Calendar.getInstance().getTime();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		String day = df.format(date);
+		DateFormat tf = new SimpleDateFormat("HH:mm:ss");
+		String time = tf.format(date);
 		if (Database.addTrade(request.getParameter("orderType"),
 				request.getParameter("symbol"), request.getParameter("exp"),
 				request.getParameter("lots"), request.getParameter("price"),
 				request.getParameter("buysell"),
-				request.getParameter("trader"),
-				request.getParameter("transDate"),
-				request.getParameter("transTime"))) {
+				request.getParameter("trader"), day, time)) {
 			response.sendRedirect(request.getContextPath());
 		}
 	}
