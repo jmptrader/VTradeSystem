@@ -67,28 +67,15 @@ public class ACK extends Order{
      * Amount of shares open for further execution. Value= tag 38 OrdQty.
      */
     int LeavesQty;
-    
-    /**
-     * General constructor for ACK class.
-     * @param order
-     */
-    protected ACK(Order order){
-        // common fields for all ACK
-        super();
-        this.MsgType = "8"; 
-        this.LastMk = "Test"; 
-        this.ExecTranType = 0;
-    }
-    
+        
     /**
      * Default class for ACK message.
      * @param order
      * @param sendingTime
      * @param ExecID
      */
-    
     public ACK (Order order, String sendingTime, int ExecID){
-        this(order); // call default constructor.
+    	super();
         this.SendingTime = sendingTime;
         this.ExecID = ExecID;
         this.OrderID = order.getClOrdID();
@@ -99,6 +86,9 @@ public class ACK extends Order{
         this.OrdStatus = 0;
         this.ExecType = 0;
         this.LeavesQty = 0;
+        this.MsgType = "8"; 
+        this.LastMk = "Test"; 
+        this.ExecTranType = 0;
     }
     
 

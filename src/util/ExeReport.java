@@ -3,6 +3,8 @@
  */
 package util;
 
+import java.time.LocalTime;
+
 /**
  * Class for Execution Report.
  * Both the ExeReport and ACK are inherited from Order class.
@@ -23,14 +25,13 @@ public class ExeReport extends ACK {
 	 */
 	protected ExeReport(Order order, int exeCounter){
 		// fill the common fields
-		super(order);
+		super(order, LocalTime.now().toString(), exeCounter);
 		this.lastCapacity = 1; // for agent
-		this.setExecID(exeCounter);
 		this.setOrderID(order.getClOrdID());
 	}
 	
 	/**
-	 * The constructor for full-fill execution Report.
+	 * The constructor for full-fill execution report.
 	 * @param order
 	 * @param exeCounter
 	 * @param exePrice
@@ -47,7 +48,7 @@ public class ExeReport extends ACK {
 		this.setLeavesQty(0); // change
 	}
 	/**
-	 * The constructor for partial order execution Report.
+	 * The constructor for partial order execution report.
 	 * @param order
 	 * @param exeCounter
 	 * @param exePrice

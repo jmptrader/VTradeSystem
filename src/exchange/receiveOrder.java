@@ -1,6 +1,7 @@
 package exchange;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -44,7 +45,7 @@ public class receiveOrder extends HttpServlet {
 				
 		Order order = InfoExchange.orderParser(fixMessage);
 		
-		ACK ack = new ACK(order, orderExecutor.getExchangeDate().toString(), ++orderExecutor.exeCounter);
+		ACK ack = new ACK(order, LocalDateTime.now().toString(), ++orderExecutor.exeCounter);
 		List<ExeReport> exeReports = orderExecutor.generateExeReport(order);
 		
 		// String reportMessage = info.reportDeparser(ack);
