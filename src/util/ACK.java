@@ -76,6 +76,7 @@ public class ACK extends Order{
      */
     public ACK(){
     	super();
+    	// common class
         this.AvgPx = 0.00f;
         this.CumQty = 0;
         this.LastPx = 0.00f;
@@ -88,20 +89,24 @@ public class ACK extends Order{
         this.ExecTranType = 0;
     }
     public ACK (Order order, String sendingTime, int ExecID){
-    	super();
+    	this();
+    	// from order class
+		this.SenderCompID = order.SenderCompID;
+		this.ClOrdID = order.ClOrdID;
+		this.Side = order.Side;
+		this.OrderQty = order.OrderQty;
+		this.Price = order.Price;
+		this.Symbol = order.Symbol;
+		this.OrderType = order.OrderType;
+		this.TimeInForce = order.TimeInForce;
+		this.TransacTime = order.TransacTime;
+		this.MaturityDay = order.MaturityDay;
+		this.MaturityMonthYear = order.MaturityMonthYear;
+		this.OrderID = order.getClOrdID();
+		this.ExecInst = order.ExecInst;
+		// own data
         this.SendingTime = sendingTime;
         this.ExecID = ExecID;
-        this.OrderID = order.getClOrdID();
-        this.AvgPx = 0.00f;
-        this.CumQty = 0;
-        this.LastPx = 0.00f;
-        this.LastShares = 0;
-        this.OrdStatus = 0;
-        this.ExecType = 0;
-        this.LeavesQty = 0;
-        this.MsgType = "8"; 
-        this.LastMk = "Test"; 
-        this.ExecTranType = 0;
     }
     
 

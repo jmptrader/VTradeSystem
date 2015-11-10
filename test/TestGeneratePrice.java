@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import util.ACK;
 import util.ExeReport;
+import util.InfoExchange;
 import util.Order;
 import exchange.OrderExecutor;
 /**
@@ -59,10 +60,11 @@ public class TestGeneratePrice {
 		ACK ack = new ACK(order, LocalTime.now().toString(), ++exe.exeCounter);
 		Assert.assertEquals(ack.getAvgPx(),0.0);
 		Assert.assertTrue(ack.getExecID() > 0);
+		String ackString = InfoExchange.ACKDeparser(ack);
+		System.out.println(ackString);
 		System.out.println(ack.getExecID());
 		System.out.println(ack.getLastPx());
 	}
-	
 	
 
 	@SuppressWarnings("deprecation")
@@ -93,6 +95,8 @@ public class TestGeneratePrice {
 			Assert.assertEquals(cumQty, rpt.getCumQty());
 			// the orderId should be the same
 			Assert.assertEquals(orderId, rpt.getOrderID()); 
+			String rptString = InfoExchange.ExeReportDeparser(rpt);
+			System.out.println(rptString);
 			System.out.println(rpt.getExecID());
 			System.out.println(rpt.getLastPx());
 		}
@@ -126,6 +130,8 @@ public class TestGeneratePrice {
 			//for each exe, the cumulative quantity of past exes  == that of current exe report 
 			Assert.assertEquals(cumQty, rpt.getCumQty());
 			// the orderId should be the same
+			String rptString = InfoExchange.ExeReportDeparser(rpt);
+			System.out.println(rptString);
 			Assert.assertEquals(orderId, rpt.getOrderID()); 
 			System.out.println(rpt.getExecID());
 			System.out.println(rpt.getLastPx());
