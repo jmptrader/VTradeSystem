@@ -1,3 +1,4 @@
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -5,6 +6,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import util.ACK;
 import util.ExeReport;
 import util.Order;
 import exchange.OrderExecutor;
@@ -14,7 +16,7 @@ import exchange.OrderExecutor;
  *
  */
 public class TestGeneratePrice {
-
+	
 	OrderExecutor exe = OrderExecutor.getInstance(); //singleton
 	
 	@SuppressWarnings("deprecation")
@@ -40,9 +42,28 @@ public class TestGeneratePrice {
 			Assert.assertEquals(orderId, rpt.getOrderID()); // all for same order
 			Assert.assertEquals(rpt.getOrdStatus(), 2);
 			Assert.assertEquals(rpt.getLeavesQty(), 0);
+			System.out.println(rpt.getExecID());
+			System.out.println(rpt.getLastPx());
 		}
 		Assert.assertEquals(cumQty, order.getOrderQty()); // all the order is executed
 	}
+	
+
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testACK(){
+		Order order = new Order();
+		order.setClOrdID(1001);
+		order.setOrderType("1"); // market order
+		order.setOrderQty(20);
+		ACK ack = new ACK(order, LocalTime.now().toString(), ++exe.exeCounter);
+		Assert.assertEquals(ack.getAvgPx(),0.0);
+		Assert.assertTrue(ack.getExecID() > 0);
+		System.out.println(ack.getExecID());
+		System.out.println(ack.getLastPx());
+	}
+	
+	
 
 	@SuppressWarnings("deprecation")
 	@Test
@@ -72,6 +93,8 @@ public class TestGeneratePrice {
 			Assert.assertEquals(cumQty, rpt.getCumQty());
 			// the orderId should be the same
 			Assert.assertEquals(orderId, rpt.getOrderID()); 
+			System.out.println(rpt.getExecID());
+			System.out.println(rpt.getLastPx());
 		}
 		Assert.assertEquals(cumQty, order.getOrderQty()); // all the order is executed
 	}
@@ -104,6 +127,8 @@ public class TestGeneratePrice {
 			Assert.assertEquals(cumQty, rpt.getCumQty());
 			// the orderId should be the same
 			Assert.assertEquals(orderId, rpt.getOrderID()); 
+			System.out.println(rpt.getExecID());
+			System.out.println(rpt.getLastPx());
 		}
 		Assert.assertEquals(cumQty, order.getOrderQty()); // all the order is executed
 	}
