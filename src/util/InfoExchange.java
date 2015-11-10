@@ -163,27 +163,27 @@ public class InfoExchange {
         if(exeMap.containsKey(map.get("LeavesQty")))
             exeReport.LeavesQty = Integer.parseInt(exeMap.get(map.get("LeavesQty")));
         if(exeMap.containsKey(map.get("lastCapacity")))
-            exeReport.lastCapacity = Integer.parseInt(exeMap.get(map.get("lastCapacity")));
+            exeReport.LastCapacity = Integer.parseInt(exeMap.get(map.get("lastCapacity")));
         return exeReport;
     }
 
     public static String ExeReportDeparser(ExeReport exeReport){
         Integer ExecID = exeReport.ExecID;
         Integer OrderID = exeReport.OrderID;
-        String SendingTime = exeReport.SendingTime;
+        //String SendingTime = exeReport.SendingTime;
         Double AvgPx = exeReport.AvgPx;
         Integer CumQty = exeReport.CumQty;
         Integer ExecTransType = exeReport.ExecTranType;
-        String LastMkt = exeReport.LastMk;
+        //String LastMkt = exeReport.LastMk;
         Double LastPx = exeReport.LastPx;
         Integer LastShares = exeReport.LastShares;
         Integer OrdStatus = exeReport.OrdStatus;
         Integer ExecType = exeReport.ExecType;
         Integer LeavesQty = exeReport.LastShares;
-
+        Integer LastCapacity = exeReport.LastCapacity;
         String fixOrderBody = OrderFixConstructor(exeReport);
-        String fixExeBody = String.format(fixExeInfo,SendingTime,
-                AvgPx, CumQty,ExecID,ExecTransType,LastMkt,LastPx,LastShares,OrderID,OrdStatus,ExecType,LeavesQty);
+        String fixExeBody = String.format(fixExeInfo,
+                AvgPx, CumQty,ExecID,ExecTransType,LastCapacity,LastPx,LastShares,OrderID,OrdStatus,ExecType,LeavesQty);
         int len = fixOrderBody.length()+fixExeBody.length()+fixTail.length();
         String prefix = String.format("8=FIX.4.2^A9=%d^A",len);
         return prefix+fixOrderBody+fixExeBody;

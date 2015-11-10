@@ -16,7 +16,7 @@ public class ExeReport extends ACK {
 	/**
 	 *  Broker capacity in order execution, 1 for agent.
 	 */
-	int lastCapacity;
+	int LastCapacity;
 	
 	/**
 	 * Genernal constructor.
@@ -32,7 +32,7 @@ public class ExeReport extends ACK {
 	protected ExeReport(Order order, int exeCounter){
 		// fill the common fields
 		super(order, LocalTime.now().toString(), exeCounter);
-		this.lastCapacity = 1; // for agent
+		this.LastCapacity = 1; // for agent
 		this.setOrderID(order.getClOrdID());
 	}
 	
