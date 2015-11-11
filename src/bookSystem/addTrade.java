@@ -94,7 +94,7 @@ public class addTrade extends HttpServlet {
 				MaturityMonthYear, MaturityDay, ExecInst);
 		try {
 			RequestHelper.sendPost(
-					"http://localhost:8080/VTradeSystem/receiveOrder",
+					"http://vtrade-env.elasticbeanstalk.com/receiveOrder",
 					InfoExchange.orderDeparser(order));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
