@@ -58,12 +58,15 @@ public class receiveOrder extends HttpServlet {
 		List<ExeReport> exeReports = orderExecutor.generateExeReport(order);
 
 		try {
-			RequestHelper.sendPost("http://localhost:8080/VTradeSystem/getACK",
-					InfoExchange.ACKDeparser(ack));
+			RequestHelper
+					.sendPost(
+							"http://vtrade-env.elasticbeanstalk.com/VTradeSystem/getACK",
+							InfoExchange.ACKDeparser(ack));
 			for (ExeReport rep : exeReports) {
-				RequestHelper.sendPost(
-						"http://localhost:8080/VTradeSystem/receiveReport",
-						InfoExchange.ExeReportDeparser(rep));
+				RequestHelper
+						.sendPost(
+								"http://vtrade-env.elasticbeanstalk.com/VTradeSystem/receiveReport",
+								InfoExchange.ExeReportDeparser(rep));
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
