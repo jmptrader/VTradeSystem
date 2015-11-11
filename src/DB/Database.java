@@ -262,6 +262,12 @@ public class Database {
 		}
 	}
 
+	/***
+	 * Get detail transaction for given traderId in csv format
+	 * 
+	 * @param traderId
+	 * @return
+	 */
 	public static String getTranctionCSVWithCondition(String traderId) {
 		// TODO Auto-generated method stub
 		try {
@@ -285,7 +291,7 @@ public class Database {
 	}
 
 	/***
-	 * 
+	 * Get transaction in csv format
 	 * 
 	 * @return
 	 */
