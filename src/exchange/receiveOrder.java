@@ -60,7 +60,7 @@ public class receiveOrder extends HttpServlet {
 		try {
 			RequestHelper
 					.sendPost(
-							"http://vtrade-env.elasticbeanstalk.com/VTradeSystem/getACK",
+							"http://vtrade-env.elasticbeanstalk.com/VTradeSystem/receiveACK",
 							InfoExchange.ACKDeparser(ack));
 			for (ExeReport rep : exeReports) {
 				RequestHelper
