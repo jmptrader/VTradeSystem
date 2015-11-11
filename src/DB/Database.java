@@ -231,37 +231,6 @@ public class Database {
 		}
 	}
 
-	/**
-	 * Get aggregation transaction data given trader id.
-	 * 
-	 * @param traderId
-	 * @return un-expired transaction data for the given trader id group by
-	 *         symbol
-	 */
-	public static String getTradeCSVWithCondition(String traderId) {
-		// TODO Auto-generated method stub
-		try {
-			connect();
-			stmt = conn.createStatement();
-			ResultSet rset = stmt
-					.executeQuery("select CONCAT_WS(',', symbol, expire_date,sum(lots) )"
-							+ " from Orders "
-							+ "where traderId="
-							+ traderId
-							+ " group by symbol, expire_date");
-			StringBuilder sb = new StringBuilder();
-			sb.append("symbol, expire_date, Lots\n");
-			while (rset.next()) {
-				sb.append(rset.getString(1));
-				sb.append("\n");
-			}
-			return sb.toString();
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			return null;
-		}
-	}
-
 	/***
 	 * Get detail transaction for given traderId in csv format
 	 * 

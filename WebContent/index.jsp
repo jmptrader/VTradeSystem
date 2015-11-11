@@ -131,16 +131,6 @@
 						<input class="btn btn-lg btn-primary btn-block"
 							value="Download all data as a csv file"
 							onClick="window.open('${pageContext.request.contextPath}/getCSV');">
-						<form target="_blank" action="getCSVWithCondition" method="GET"
-							class="form-horizontal" role="form">
-							<div class="form-group">
-								<label for="exampleInputEmail1">Trader id:</label> <input
-									required type="number" min="1" class="form-control"
-									placeholder="Enter trader id" name="traderId">
-							</div>
-							<input class="btn btn-lg btn-primary btn-block" type="submit"
-								value="Download aggregation data as a csv file given trader id">
-						</form>
 					</div>
 				</div>
 			</div>
