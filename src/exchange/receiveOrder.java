@@ -62,7 +62,7 @@ public class receiveOrder extends HttpServlet {
 					InfoExchange.ACKDeparser(ack));
 			for (ExeReport rep : exeReports) {
 				RequestHelper.sendPost(
-						"http://localhost:8080/VTradeSystem/receiveFill",
+						"http://localhost:8080/VTradeSystem/receiveReport",
 						InfoExchange.ExeReportDeparser(rep));
 			}
 		} catch (Exception e) {

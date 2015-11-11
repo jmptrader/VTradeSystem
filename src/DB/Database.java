@@ -21,9 +21,8 @@ import util.JSONUtil;
  *
  */
 public class Database {
-	// static String jdbcUrl =
-	// "jdbc:mysql://cs4111.cf7twhrk80xs.us-west-2.rds.amazonaws.com:3306/V_Trade";
-	static String jdbcUrl = "jdbc:mysql://localhost:8889/vtrade";
+	static String jdbcUrl = "jdbc:mysql://cs4111.cf7twhrk80xs.us-west-2.rds.amazonaws.com:3306/V_Trade";
+	// static String jdbcUrl = "jdbc:mysql://localhost:8889/vtrade";
 	static Connection conn = null;
 	private static Statement stmt;
 
@@ -51,10 +50,10 @@ public class Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// String userid = "sd2810";
-		// String password = "26842810";
-		String userid = "root";
-		String password = "root";
+		String userid = "sd2810";
+		String password = "26842810";
+		// String userid = "root";
+		// String password = "root";
 		conn = DriverManager.getConnection(jdbcUrl, userid, password);
 	}
 
@@ -79,7 +78,7 @@ public class Database {
 		try {
 			connect();
 			stmt = conn.createStatement();
-			ResultSet rset = stmt.executeQuery("select * from Transaction");
+			ResultSet rset = stmt.executeQuery("select * from Orders");
 			JSONObject jsonobject = new JSONObject();
 			jsonobject.put("test", JSONUtil.convert(rset));
 			return jsonobject;
@@ -115,7 +114,7 @@ public class Database {
 			addCommodity(symbol, exp);
 			addTrader(trader);
 
-			String query = "INSERT INTO Transaction"
+			String query = "INSERT INTO Orders"
 					+ "(orderType, traderId, symbol, expire_date, action,price,lots,date,time) VALUES"
 					+ "(\"" + orderType + "\"," + trader + ",\"" + symbol
 					+ "\",\"" + exp + "\",\"" + buysell + "\"," + price + ",\""
@@ -136,45 +135,28 @@ public class Database {
 		}
 	}
 
-	/**
+	/***
 	 * Add a new transaction sent from exchange
 	 * 
-	 * @param orderType
-	 * @param symbol
-	 * @param exp
-	 * @param lots
+	 * @param reportId
+	 * @param orderId
 	 * @param price
-	 * @param buysell
-	 * @param trader
-	 * @param transDate
-	 * @param transTime
+	 * @param lots
+	 * @param transactTime
 	 * @return
 	 */
-	public static int addFill(String orderType, String symbol, String exp,
-			String lots, String price, String buysell, String trader,
-			String transDate, String transTime) {
+	public static int addFill(int reportId, int orderId, double price,
+			int lots, String transactTime) {
 		try {
 			connect();
 			stmt = conn.createStatement();
 
-			addCommodity(symbol, exp);
-			addTrader(trader);
-
-			String query = "INSERT INTO Transaction"
-					+ "(orderType, traderId, symbol, expire_date, action,price,lots,date,time) VALUES"
-					+ "(\"" + orderType + "\"," + trader + ",\"" + symbol
-					+ "\",\"" + exp + "\",\"" + buysell + "\"," + price + ",\""
-					+ ((buysell.compareTo("buy") == 0) ? lots : ("-" + lots))
-					+ "\",\"" + transDate + "\",\"" + transTime + "\")";
-
-			stmt.executeUpdate(query, stmt.RETURN_GENERATED_KEYS);
-			ResultSet rs = stmt.getGeneratedKeys();
-			int generatedKey = 0;
-			if (rs.next()) {
-				generatedKey = rs.getInt(1);
-				return generatedKey;
-			}
-			return -1;
+			String query = "INSERT INTO Report"
+					+ "(reportId, orderId, price, lots, transactTime) VALUES"
+					+ "(" + reportId + "," + orderId + "," + price + "," + lots
+					+ ",\"" + transactTime + "\")";
+			stmt.executeUpdate(query);
+			return 1;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			return -1;
@@ -234,8 +216,8 @@ public class Database {
 			connect();
 			stmt = conn.createStatement();
 			ResultSet rset = stmt
-					.executeQuery("select CONCAT_WS(',', transactionId, traderId, symbol, expire_date,"
-							+ "action, price, lots, date, time) from Transaction");
+					.executeQuery("select CONCAT_WS(',', orderId, traderId, symbol, expire_date,"
+							+ "action, price, lots, date, time) from Orders");
 			StringBuilder sb = new StringBuilder();
 			sb.append("transactionId, traderId, symbol, expire_date, action, price, lots, date, time\n");
 			while (rset.next()) {
@@ -263,11 +245,106 @@ public class Database {
 			stmt = conn.createStatement();
 			ResultSet rset = stmt
 					.executeQuery("select CONCAT_WS(',', symbol, expire_date,sum(lots) )"
-							+ " from Transaction "
+							+ " from Orders "
 							+ "where traderId="
-							+ traderId + " group by symbol, expire_date");
+							+ traderId
+							+ " group by symbol, expire_date");
 			StringBuilder sb = new StringBuilder();
 			sb.append("symbol, expire_date, Lots\n");
+			while (rset.next()) {
+				sb.append(rset.getString(1));
+				sb.append("\n");
+			}
+			return sb.toString();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
+	public static String getTranctionCSVWithCondition(String traderId) {
+		// TODO Auto-generated method stub
+		try {
+			connect();
+			stmt = conn.createStatement();
+			ResultSet rset = stmt
+					.executeQuery("select CONCAT_WS(',', traderId, symbol, expire_date, profit)"
+							+ "from (Select t.traderId, t.symbol, t.expire_date, (( (Select sum(s.price * s.lots) from ( select Report.reportId, Report.price, Report.lots, Report.transactTime, Orders.symbol, Orders.expire_date, Orders.action, Orders.traderId from Orders join Report on Orders.orderId = Report.orderId ) as s Where s.action = 'sell' and s.traderId = t.traderId and s.symbol = t.symbol and s.expire_date = t.expire_date ) - (Select sum(b.price * b.lots) from ( select Report.reportId, Report.price, Report.lots, Report.transactTime, Orders.symbol, Orders.expire_date, Orders.action, Orders.traderId from Orders join Report on Orders.orderId = Report.orderId ) as b Where b.action = 'buy' and b.traderId = t.traderId and b.symbol = t.symbol and b.expire_date = t.expire_date ) )*250.0) as profit from ( select Report.reportId, Report.price, Report.lots, Report.transactTime, Orders.symbol, Orders.expire_date, Orders.action, Orders.traderId from Orders join Report on Orders.orderId = Report.orderId ) as t group by t.traderId, t.symbol, t.expire_date) as d"
+							+ " where traderId=" + traderId);
+			StringBuilder sb = new StringBuilder();
+			sb.append("traderId, symbol, expire_date, profit\n");
+			while (rset.next()) {
+				sb.append(rset.getString(1));
+				sb.append("\n");
+			}
+			return sb.toString();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
+	/***
+	 * 
+	 * 
+	 * @return
+	 */
+	public static String getTransactionCSV() {
+		try {
+			connect();
+			stmt = conn.createStatement();
+			ResultSet rset = stmt
+					.executeQuery("select CONCAT_WS(',', traderId, profit)"
+							+ "from (select traderId, sum(profit*250) as profit from (Select t.traderId, t.symbol, t.expire_date, ( (Select sum(s.price * s.lots) from ( select Report.reportId, Report.price, Report.lots, Report.transactTime, Orders.symbol, Orders.expire_date, Orders.action, Orders.traderId from Orders join Report on Orders.orderId = Report.orderId ) as s Where s.action = 'sell' and s.traderId = t.traderId and s.symbol = t.symbol and s.expire_date = t.expire_date ) - (Select sum(b.price * b.lots) from ( select Report.reportId, Report.price, Report.lots, Report.transactTime, Orders.symbol, Orders.expire_date, Orders.action, Orders.traderId from Orders join Report on Orders.orderId = Report.orderId ) as b Where b.action = 'buy' and b.traderId = t.traderId and b.symbol = t.symbol and b.expire_date = t.expire_date ) ) as profit from ( select Report.reportId, Report.price, Report.lots, Report.transactTime, Orders.symbol, Orders.expire_date, Orders.action, Orders.traderId from Orders join Report on Orders.orderId = Report.orderId ) as t group by t.traderId, t.symbol, t.expire_date) as f group by traderId) as d");
+			StringBuilder sb = new StringBuilder();
+			sb.append("traderId, profit\n");
+			while (rset.next()) {
+				sb.append(rset.getString(1));
+				sb.append("\n");
+			}
+			return sb.toString();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
+	/***
+	 * Get all the transactions
+	 * 
+	 * @return
+	 */
+	public static JSONObject getTransaction() {
+		try {
+			connect();
+			stmt = conn.createStatement();
+			ResultSet rset = stmt
+					.executeQuery("select Report.reportId, Report.price, Report.lots, Report.transactTime, Orders.symbol, Orders.expire_date, Orders.action, Orders.traderId from Orders join Report Where Orders.orderId = Report.orderId");
+			JSONObject jsonobject = new JSONObject();
+			jsonobject.put("test", JSONUtil.convert(rset));
+			return jsonobject;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
+	/***
+	 * Generage aggregation position output give trader id
+	 * 
+	 * @param traderId
+	 * @return
+	 */
+	public static String getTransactionCSVWithPrice(String traderId) {
+		try {
+			connect();
+			stmt = conn.createStatement();
+			ResultSet rset = stmt
+					.executeQuery("select CONCAT_WS(',', traderId, symbol, expire_date, buy_average, sell_average)"
+							+ "from (select traderId, symbol, expire_date, (( Select sum(b.price * b.lots) from ( select Report.reportId, Report.price, Report.lots, Report.transactTime, Orders.symbol, Orders.expire_date, Orders.action, Orders.traderId from Orders join Report on Orders.orderId = Report.orderId ) as b Where b.action = 'buy' and b.traderId = t.traderId and b.symbol = t.symbol and b.expire_date = t.expire_date )/( Select sum( s.lots) from ( select Report.reportId, Report.price, Report.lots, Report.transactTime, Orders.symbol, Orders.expire_date, Orders.action, Orders.traderId from Orders join Report on Orders.orderId = Report.orderId ) as s Where s.action = 'sell' and s.traderId = t.traderId and s.symbol = t.symbol and s.expire_date = t.expire_date )) as buy_average, (( Select sum(s.price * s.lots) from ( select Report.reportId, Report.price, Report.lots, Report.transactTime, Orders.symbol, Orders.expire_date, Orders.action, Orders.traderId from Orders join Report on Orders.orderId = Report.orderId ) as s Where s.action = 'sell' and s.traderId = t.traderId and s.symbol = t.symbol and s.expire_date = t.expire_date )/( Select sum( s.lots) from ( select Report.reportId, Report.price, Report.lots, Report.transactTime, Orders.symbol, Orders.expire_date, Orders.action, Orders.traderId from Orders join Report on Orders.orderId = Report.orderId ) as s Where s.action = 'sell' and s.traderId = t.traderId and s.symbol = t.symbol and s.expire_date = t.expire_date )) as sell_average from ( select Report.reportId, Report.price, Report.lots, Report.transactTime, Orders.symbol, Orders.expire_date, Orders.action, Orders.traderId from Orders join Report on Orders.orderId = Report.orderId ) as t group by traderId, symbol, expire_date) as d"
+							+ " where traderId=" + traderId);
+			StringBuilder sb = new StringBuilder();
+			sb.append("traderId, symbol, expire_date, buy_average, sell_average\n");
 			while (rset.next()) {
 				sb.append(rset.getString(1));
 				sb.append("\n");

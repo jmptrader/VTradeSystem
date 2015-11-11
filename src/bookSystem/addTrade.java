@@ -65,7 +65,7 @@ public class addTrade extends HttpServlet {
 		int SenderCompID = Integer.parseInt(request.getParameter("trader"));
 		String SendingTime = request.getParameter("exp").substring(0, 4)
 				+ request.getParameter("exp").substring(5, 7)
-				+ request.getParameter("exp").substring(8, 10) + " " + tf;
+				+ request.getParameter("exp").substring(8, 10) + "-" + time;
 		Integer Side = request.getParameter("buysell").compareTo("buy") == 0 ? 1
 				: 2;
 		Integer OrderQty = Integer.parseInt(request.getParameter("lots"));
@@ -78,10 +78,10 @@ public class addTrade extends HttpServlet {
 				+ request.getParameter("exp").substring(5, 7);
 		String MaturityDay = request.getParameter("exp").substring(8, 10);
 		String ExecInst = "M";
-		if (request.getParameter("orderType").compareTo("market") == 0) {
+		if (request.getParameter("orderType").compareTo("Market") == 0) {
 			Price = 0.0;
 			OrderType = "1";
-		} else if (request.getParameter("orderType").compareTo("limit") == 0) {
+		} else if (request.getParameter("orderType").compareTo("Limit") == 0) {
 			Price = Double.parseDouble(request.getParameter("price"));
 			OrderType = "2";
 		} else {

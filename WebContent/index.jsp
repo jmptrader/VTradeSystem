@@ -59,7 +59,7 @@
 									class="form-control" name="exp" placeholder="Enter expiry date">
 							</div>
 							<div class="form-group">
-								<label>Lots</label> <input required type="number" min="1"
+								<label>Lots</label> <input required type="number" min="2"
 									max="1000000" step="1" class="form-control" name="lots"
 									placeholder="Enter lots">
 							</div>
@@ -86,6 +86,40 @@
 			</div>
 		</div>
 		<div class="col-md-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">Transactions</div>
+				<div id="transactionInfo"></div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">Download data</div>
+				<div class="panel-body">
+					<div class="col-md-12">
+						<input class="btn btn-lg btn-primary btn-block"
+							value="Output porfit and loss report"
+							onClick="window.open('${pageContext.request.contextPath}/getAllTransactionCSV');">
+						<form target="_blank" action="getTransactionCSVWithCondition"
+							method="GET" class="form-horizontal" role="form">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Trader id:</label> <input
+									required type="number" min="1" class="form-control"
+									placeholder="Enter trader id" name="traderId">
+							</div>
+							<input class="btn btn-lg btn-primary btn-block" type="submit"
+								value="Output p&l details for given trader id">
+						</form>
+						<form target="_blank" action="getTransactionCSVWithPrice"
+							method="GET" class="form-horizontal" role="form">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Trader id:</label> <input
+									required type="number" min="1" class="form-control"
+									placeholder="Enter trader id" name="traderId">
+							</div>
+							<input class="btn btn-lg btn-primary btn-block" type="submit"
+								value="Output aggregation position considering price">
+						</form>
+					</div>
+				</div>
+			</div>
 			<div class="panel panel-default">
 				<div class="panel-heading">Orders</div>
 				<div id="tradeInfo"></div>
@@ -135,7 +169,7 @@ var Lots_custom = React.createClass({
 
 var columnData =[
 {
-    "columnName": "transactionId",
+    "columnName": "orderId",
     "order": 0,
     "displayName": "Order_id"
   },
@@ -206,4 +240,24 @@ var GetTradeButton = React.createClass({
 	  }
 	});
 ReactDOM.render(<GetTradeButton/>, document.getElementById("tradeInfo"));
+
+var GetTransactionButton = React.createClass({
+	 handleClick : function(event) {
+    	$.get("getTransaction", function(result) {
+	      ReactDOM.render(<Griddle results = {result['test']}/>, document.getElementById("transactionInfo"));
+     	});
+  	 },
+
+     componentDidMount : function() {
+		this.handleClick();
+	 },
+	 
+	 
+     render : function() {
+	    return (
+      	<div>Loading data...</div>
+    	);
+	  }
+	});
+ReactDOM.render(<GetTransactionButton/>, document.getElementById("transactionInfo"));
 </script>
