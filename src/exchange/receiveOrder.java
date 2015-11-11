@@ -60,12 +60,12 @@ public class receiveOrder extends HttpServlet {
 		try {
 			RequestHelper
 					.sendPost(
-							"http://vtrade-env.elasticbeanstalk.com/VTradeSystem/receiveACK",
+							"http://vtrade-env.elasticbeanstalk.com/receiveACK",
 							InfoExchange.ACKDeparser(ack));
 			for (ExeReport rep : exeReports) {
 				RequestHelper
 						.sendPost(
-								"http://vtrade-env.elasticbeanstalk.com/VTradeSystem/receiveReport",
+								"http://vtrade-env.elasticbeanstalk.com/receiveReport",
 								InfoExchange.ExeReportDeparser(rep));
 			}
 		} catch (Exception e) {
