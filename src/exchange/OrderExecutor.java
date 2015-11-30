@@ -34,10 +34,10 @@ import java.util.Random;
 public class OrderExecutor {
 	public int exeCounter = 0;
 	private Date exchangeDate = new Date();
-	private static int RANDOM_NUMBER_BOUND = 100;
-	private static int FULL_FILL_THRESHOLD = 50;
-	private static double MAX_EXE_PRICE = 50.00f;
-	private static double MIN_EXE_PRICE = 10.00f;
+	private static final int RANDOM_NUMBER_BOUND = 100;
+	private static final int FULL_FILL_THRESHOLD = 50;
+	private static final double MAX_EXE_PRICE = 50.00f;
+	private static final double MIN_EXE_PRICE = 10.00f;
 
 	private static OrderExecutor instance = null; // singleton
 

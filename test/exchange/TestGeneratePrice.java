@@ -1,9 +1,9 @@
+package exchange;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import util.ACK;
@@ -19,8 +19,7 @@ import exchange.OrderExecutor;
 public class TestGeneratePrice {
 	
 	OrderExecutor exe = OrderExecutor.getInstance(); //singleton
-	
-	@SuppressWarnings("deprecation")
+
 	@Test
 	public void testFullFillReport(){
 		List<ExeReport> reports = new ArrayList<ExeReport>();
@@ -66,8 +65,6 @@ public class TestGeneratePrice {
 		System.out.println(ack.getLastPx());
 	}
 	
-
-	@SuppressWarnings("deprecation")
 	@Test
 	public void testPatialFillReport(){
 		List<ExeReport> reports = new ArrayList<ExeReport>();
@@ -103,7 +100,6 @@ public class TestGeneratePrice {
 		Assert.assertEquals(cumQty, order.getOrderQty()); // all the order is executed
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void testSellOrderReport(){
 		List<ExeReport> reports = new ArrayList<ExeReport>();
