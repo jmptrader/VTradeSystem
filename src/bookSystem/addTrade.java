@@ -52,8 +52,13 @@ public class addTrade extends HttpServlet {
 		String day = df.format(date);
 		DateFormat tf = new SimpleDateFormat("HH:mm:ss");
 		String time = tf.format(date);
+		String MaturityMonthYear = request.getParameter("exp").substring(0, 4)
+				+ request.getParameter("exp").substring(5, 7);
+		String MaturityDay = "01";// util.generateDay(MaturityMonthYear)
+		String expire_t0_sql = request.getParameter("exp") + "-" + MaturityDay;
+
 		Integer ClOrdID = Database.addTrade(request.getParameter("orderType"),
-				request.getParameter("symbol"), request.getParameter("exp"),
+				request.getParameter("symbol"), expire_t0_sql,
 				request.getParameter("lots"), request.getParameter("price"),
 				request.getParameter("buysell"),
 				request.getParameter("trader"), day, time);
@@ -74,9 +79,6 @@ public class addTrade extends HttpServlet {
 		String OrderType;
 		String TimeInForce = "1";
 		String TransacTime = SendingTime;
-		String MaturityMonthYear = request.getParameter("exp").substring(0, 4)
-				+ request.getParameter("exp").substring(5, 7);
-		String MaturityDay = request.getParameter("exp").substring(8, 10);
 		String ExecInst = "M";
 		if (request.getParameter("orderType").compareTo("Market") == 0) {
 			Price = 0.0;

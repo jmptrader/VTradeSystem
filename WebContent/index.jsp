@@ -27,6 +27,7 @@
 <script
 	src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
 <script type="text/javascript" src="js/griddle.js"></script>
+<script type="text/babel" src="js/util.js"></script>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
 <script
@@ -34,6 +35,10 @@
 </head>
 <body>
 	<h2 align="center">VTrade System</h2>
+	<h3 align="center">
+		Futrue page, go to <a href="swap.jsp">swap</a> page.
+	</h3>
+	<h3 align="center" id="serverDate"></h3>
 	<div class="container">
 		<div class="col-md-4">
 			<div class="panel panel-default">
@@ -55,7 +60,7 @@
 									placeholder="Enter Symbol">
 							</div>
 							<div class="form-group">
-								<label>Contract Expiry:</label> <input required type="date"
+								<label>Contract Expiry:</label> <input required type="month"
 									class="form-control" name="exp" placeholder="Enter expiry date">
 							</div>
 							<div class="form-group">

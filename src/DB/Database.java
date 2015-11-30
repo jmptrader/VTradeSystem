@@ -330,4 +330,50 @@ public class Database {
 			return null;
 		}
 	}
+
+	public static Integer addSwap(String start, String termination,
+			String floatRate, String spread, String fixedRate,
+			String fixedPayer, String parValue, String trader, String day,
+			String time) {
+		// TODO Auto-generated method stub
+		try {
+			connect();
+			stmt = conn.createStatement();
+
+			addTrader(trader);
+
+			String query = "INSERT INTO Swaps"
+					+ "(start, termination, floatRate, spread, fixedRate, fixedPayer, parValue, trader,date,time) VALUES"
+					+ "(\"" + start + "\",\"" + termination + "\",\""
+					+ floatRate + "\"," + spread + "," + fixedRate + ",\""
+					+ fixedPayer + "\"," + parValue + "," + trader + ",\""
+					+ day + "\",\"" + time + "\")";
+
+			stmt.executeUpdate(query, stmt.RETURN_GENERATED_KEYS);
+			ResultSet rs = stmt.getGeneratedKeys();
+			int generatedKey = 0;
+			if (rs.next()) {
+				generatedKey = rs.getInt(1);
+				return generatedKey;
+			}
+			return -1;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return -1;
+		}
+	}
+
+	public static JSONObject getSwap() {
+		try {
+			connect();
+			stmt = conn.createStatement();
+			ResultSet rset = stmt.executeQuery("select * from Swaps");
+			JSONObject jsonobject = new JSONObject();
+			jsonobject.put("test", JSONUtil.convert(rset));
+			return jsonobject;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
 }
