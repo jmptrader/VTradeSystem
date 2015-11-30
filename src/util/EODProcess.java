@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Class for EOD (end of day) process.
@@ -12,8 +11,6 @@ import java.util.List;
  *
  */
 public final class EODProcess {
-
-	@SuppressWarnings("deprecation")
 	
 	/*
 	 * Offsets to initialize Date instance by Date(year, month, day)
@@ -70,6 +67,7 @@ public final class EODProcess {
 	 * @param date
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	public Boolean isBusinessDay(Date date){
 		if (date.getDay() == Calendar.SATURDAY - 1 || date.getDay() == Calendar.SUNDAY - 1 || 
 				this.nyseHolidays.containsKey(this.stringFormat.format(date))){
@@ -82,9 +80,10 @@ public final class EODProcess {
 	
 	/**
 	 * Get the last business day of given month and year.
-	 * @param yearAndMonth 
-	 * @return 
+	 * @param yearAndMonth in YYYYMM format.
+	 * @return day of Date.
 	 */
+	@SuppressWarnings("deprecation")
 	public Date getLastBusinessDay(String yearAndMonth){
 		int year = Integer.parseInt(yearAndMonth.substring(0, 4)) - YEAR_OFFSET ;
 		int month = Integer.parseInt(yearAndMonth.substring(4)) - MONTH_OFFSET;
@@ -104,8 +103,8 @@ public final class EODProcess {
 	
 	/**
 	 * Get the day string of the last business day of given month and year.
-	 * @param yearAndMonth
-	 * @return the day string.
+	 * @param yearAndMonth in YYYYMM format.
+	 * @return the day string in DD format.
 	 */
 	public String getLastBusinessDayString(String yearAndMonth){
 		Date lastDay = getLastBusinessDay(yearAndMonth);
@@ -152,7 +151,6 @@ public final class EODProcess {
 	 * Proceed to next business day. Skip if nextDay is a weekend 
 	 * or a NYSE holiday.
 	 */
-	@SuppressWarnings("deprecation")
 	public void goToNextBusinessDay(){
 		Date nextDay;
 		do{
