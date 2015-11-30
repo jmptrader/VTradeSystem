@@ -61,6 +61,6 @@ public class addSwap extends HttpServlet {
 				request.getParameter("fixedPayer"),
 				request.getParameter("parValue"),
 				request.getParameter("trader"), day, time);
-		response.sendRedirect(request.getContextPath());
+		response.sendRedirect(request.getContextPath() + "/swap.jsp");
 	}
 }
