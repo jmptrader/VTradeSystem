@@ -91,6 +91,12 @@
 			</div>
 		</div>
 		<div class="col-md-8">
+			<input class="btn btn-lg btn-primary btn-block"
+				value="Get Future expire today"
+				onClick="window.open('${pageContext.request.contextPath}/getEODFutureTodayCSV');">
+			<input class="btn btn-lg btn-primary btn-block"
+				value="Get Future expire after today"
+				onClick="window.open('${pageContext.request.contextPath}/getEODFutureCSV');">
 			<div class="panel panel-default">
 				<div class="panel-heading">Transactions</div>
 				<div id="transactionInfo"></div>

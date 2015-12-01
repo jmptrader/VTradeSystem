@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import util.EODProcess;
+
 /**
  * Servlet implementation class getServerDate
  */
@@ -33,7 +35,7 @@ public class getServerDate extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		JSONObject serverDate = new JSONObject();
-		serverDate.put("date", "2015-11-25");
+		serverDate.put("date", EODProcess.getInstance().getCurrentDateString());
 		response.setContentType("application/json");
 		response.getWriter().write(serverDate.toString());
 	}

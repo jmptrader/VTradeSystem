@@ -98,6 +98,12 @@
 			</div>
 		</div>
 		<div class="col-md-8">
+			<input class="btn btn-lg btn-primary btn-block"
+				value="Get Swap expire today"
+				onClick="window.open('${pageContext.request.contextPath}/getEODSwapTodayCSV');">
+			<input class="btn btn-lg btn-primary btn-block"
+				value="Get Swap expire after today"
+				onClick="window.open('${pageContext.request.contextPath}/getEODSwapCSV');">
 			<div class="panel panel-default">
 				<div class="panel-heading">Swaps</div>
 				<div id="swapInfo"></div>

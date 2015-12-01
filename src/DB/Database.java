@@ -233,12 +233,13 @@ public class Database {
 			return null;
 		}
 	}
-	
+
 	/**
-	 * Get the future contracts expires on current date. 
+	 * Get the future contracts expires on current date.
+	 * 
 	 * @return
 	 */
-	public static String getTradeCSVFutureExpireToday(){
+	public static String getTradeCSVFutureExpireToday() {
 		EODProcess eodProcess = EODProcess.getInstance();
 		Date currentDate = eodProcess.getCurrentDate();
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -248,7 +249,8 @@ public class Database {
 			stmt = conn.createStatement();
 			ResultSet rset = stmt
 					.executeQuery("select CONCAT_WS(',', orderId, traderId, symbol, expire_date,"
-							+ "action, price, lots, date, time) from Orders where expire_date ==" + dateString );
+							+ "action, price, lots, date, time) from Orders where expire_date =\""
+							+ dateString + "\"");
 			StringBuilder sb = new StringBuilder();
 			sb.append("transactionId, traderId, symbol, expire_date, action, price, lots, date, time\n");
 			while (rset.next()) {
@@ -261,12 +263,13 @@ public class Database {
 			return null;
 		}
 	}
-	
+
 	/**
-	 * Get the future contracts expires after current date. 
+	 * Get the future contracts expires after current date.
+	 * 
 	 * @return
 	 */
-	public static String getTradeCSVFutureExpireAfterToday(){
+	public static String getTradeCSVFutureExpireAfterToday() {
 		EODProcess eodProcess = EODProcess.getInstance();
 		Date currentDate = eodProcess.getCurrentDate();
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -276,7 +279,8 @@ public class Database {
 			stmt = conn.createStatement();
 			ResultSet rset = stmt
 					.executeQuery("select CONCAT_WS(',', orderId, traderId, symbol, expire_date,"
-							+ "action, price, lots, date, time) from Orders where expire_date >" + dateString );
+							+ "action, price, lots, date, time) from Orders where expire_date >\""
+							+ dateString + "\"");
 			StringBuilder sb = new StringBuilder();
 			sb.append("transactionId, traderId, symbol, expire_date, action, price, lots, date, time\n");
 			while (rset.next()) {
@@ -289,13 +293,13 @@ public class Database {
 			return null;
 		}
 	}
-	
-	
+
 	/**
 	 * Get the swap contract expires on current date.
+	 * 
 	 * @return
 	 */
-	public static String getTradeCSVSwapExpireToday(){
+	public static String getTradeCSVSwapExpireToday() {
 		EODProcess eodProcess = EODProcess.getInstance();
 		Date currentDate = eodProcess.getCurrentDate();
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -306,7 +310,7 @@ public class Database {
 			ResultSet rset = stmt
 					.executeQuery("select CONCAT_WS(',', swapId, trader, start, termination, floatRate,"
 							+ "spread, fixedRate, fixedPayer, parValue, date, time) from Swaps "
-							+ "where termination ==" + dateString );
+							+ "where termination =\"" + dateString + "\"");
 			StringBuilder sb = new StringBuilder();
 			sb.append("transactionId, trader, start, termination, floatRate, spread, fixedRate, fixedPayer"
 					+ " parValue, date, time\n");
@@ -320,11 +324,13 @@ public class Database {
 			return null;
 		}
 	}
+
 	/**
 	 * Get the swap contracts expires after current date.
+	 * 
 	 * @return
 	 */
-	public static String getTradeCSVSwapAfterToday(){
+	public static String getTradeCSVSwapAfterToday() {
 		EODProcess eodProcess = EODProcess.getInstance();
 		Date currentDate = eodProcess.getCurrentDate();
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -335,7 +341,7 @@ public class Database {
 			ResultSet rset = stmt
 					.executeQuery("select CONCAT_WS(',', swapId, trader, start, termination, floatRate,"
 							+ "spread, fixedRate, fixedPayer, parValue, date, time) from Swaps "
-							+ "where termination >" + dateString);
+							+ "where termination >\"" + dateString + "\"");
 			StringBuilder sb = new StringBuilder();
 			sb.append("transactionId, trader, start, termination, floatRate, spread, fixedRate, fixedPayer"
 					+ " parValue, date, time\n");
@@ -349,7 +355,7 @@ public class Database {
 			return null;
 		}
 	}
-	
+
 	/***
 	 * Get detail transaction for given traderId in csv format
 	 * 
