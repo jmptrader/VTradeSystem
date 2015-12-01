@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import util.EODProcess;
 import util.InfoExchange;
 import util.Order;
 import util.RequestHelper;
@@ -54,7 +55,8 @@ public class addTrade extends HttpServlet {
 		String time = tf.format(date);
 		String MaturityMonthYear = request.getParameter("exp").substring(0, 4)
 				+ request.getParameter("exp").substring(5, 7);
-		String MaturityDay = "01";// util.generateDay(MaturityMonthYear)
+		String MaturityDay = EODProcess.getInstance()
+				.getLastButThreeBusinessDayString(MaturityMonthYear);
 		String expire_t0_sql = request.getParameter("exp") + "-" + MaturityDay;
 
 		Integer ClOrdID = Database.addTrade(request.getParameter("orderType"),
@@ -68,9 +70,8 @@ public class addTrade extends HttpServlet {
 		}
 
 		int SenderCompID = Integer.parseInt(request.getParameter("trader"));
-		String SendingTime = request.getParameter("exp").substring(0, 4)
-				+ request.getParameter("exp").substring(5, 7)
-				+ request.getParameter("exp").substring(8, 10) + "-" + time;
+		String SendingTime = day.substring(0, 4) + day.substring(5, 7)
+				+ day.substring(8, 10) + "-" + time;
 		Integer Side = request.getParameter("buysell").compareTo("buy") == 0 ? 1
 				: 2;
 		Integer OrderQty = Integer.parseInt(request.getParameter("lots"));
