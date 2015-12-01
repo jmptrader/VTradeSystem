@@ -34,19 +34,10 @@ public class TestEODProcess {
 	}
 	
 	@Test
-	public void testGetLastBusinessDay(){
-		String yearAndMonth = "201602";
-		Date lastDay = eodProcess.getLastBusinessDay(yearAndMonth);
+	public void testGetLastButThreeBusinessDay(){
+		String yearAndMonth = "201601";
+		Date lastDay = eodProcess.getLastButThreeBusinessDay(yearAndMonth);
 		Assert.assertTrue(eodProcess.isBusinessDay(lastDay));
-	}
-	
-	@Test
-	public void testGetThreeDaysLater(){
-		Date threeDaysLater = eodProcess.getThreeBusinessDaysLater();
-		Date currentDate = eodProcess.getCurrentDate();
-		int diffInDays = (int)( (threeDaysLater.getTime() - currentDate.getTime()) 
-				/ (1000 * 60 * 60 * 24) );
-		Assert.assertTrue(diffInDays >= 3);
-		Assert.assertTrue(eodProcess.isBusinessDay((threeDaysLater)));
+		System.out.println(lastDay.getDate());
 	}
 }

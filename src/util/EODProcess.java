@@ -19,11 +19,11 @@ public final class EODProcess {
 	private static final int MONTH_OFFSET = 1;
 	private static final int DAY_OFFSET = 1;
 	// Hashmap to record NYSE holidays.
-	private HashMap<String, String> nyseHolidays = new HashMap<String, String>();
+	private final HashMap<String, String> nyseHolidays = new HashMap<String, String>();
 	private static EODProcess instance = null; 
 	// get calendar instance
 	private Calendar systemCalendar = Calendar.getInstance();
-	private SimpleDateFormat stringFormat = new SimpleDateFormat("yyyyMMdd");     
+	private final SimpleDateFormat stringFormat = new SimpleDateFormat("yyyyMMdd");     
 	
 	/**
 	 * Constructor of EODProcess.
@@ -79,14 +79,15 @@ public final class EODProcess {
 	}
 	
 	/**
-	 * Get the last business day of given month and year.
+	 * Get last but three business day of given month and year.
 	 * @param yearAndMonth in YYYYMM format.
 	 * @return day of Date.
 	 */
 	@SuppressWarnings("deprecation")
-	public Date getLastBusinessDay(String yearAndMonth){
+	public Date getLastButThreeBusinessDay(String yearAndMonth){
 		int year = Integer.parseInt(yearAndMonth.substring(0, 4)) - YEAR_OFFSET ;
 		int month = Integer.parseInt(yearAndMonth.substring(4)) - MONTH_OFFSET;
+		int counter = 2;
 		Date expiry = new Date(year, month, DAY_OFFSET);
 		Calendar backCalendar = Calendar.getInstance();
 		backCalendar.setTime(expiry);
@@ -94,7 +95,10 @@ public final class EODProcess {
 		backCalendar.set(Calendar.DAY_OF_MONTH, backCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 		Date lastDay = backCalendar.getTime();
 		// back-track
-		while(!isBusinessDay(lastDay)){
+		while(counter > 0){
+			if (isBusinessDay(lastDay)){
+				counter--;
+			}
 			backCalendar.add(Calendar.DAY_OF_MONTH, -1);
 			lastDay = backCalendar.getTime();
 		}
@@ -102,32 +106,13 @@ public final class EODProcess {
 	}
 	
 	/**
-	 * Get the day string of the last business day of given month and year.
+	 * Get the last but three day string of the last business day of given month and year.
 	 * @param yearAndMonth in YYYYMM format.
 	 * @return the day string in DD format.
 	 */
-	public String getLastBusinessDayString(String yearAndMonth){
-		Date lastDay = getLastBusinessDay(yearAndMonth);
+	public String getLastButThreeBusinessDayString(String yearAndMonth){
+		Date lastDay = getLastButThreeBusinessDay(yearAndMonth);
 		return this.stringFormat.format(lastDay).substring(6);
-	}
-	
-	/**
-	 * Get the date of three business days later of current day.
-	 * @return
-	 */
-	public Date getThreeBusinessDaysLater(){
-		Date currentDate = this.systemCalendar.getTime();
-		Calendar forwardCalendar = Calendar.getInstance();
-		forwardCalendar.setTime(currentDate);
-		int counter = 3;
-		while(counter > 0){
-			forwardCalendar.add(Calendar.DATE, 1);
-			currentDate = forwardCalendar.getTime();
-			if (isBusinessDay(currentDate)){
-				counter--;
-			}
-		}
-		return currentDate;
 	}
 
 	/**
