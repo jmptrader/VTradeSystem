@@ -112,6 +112,9 @@
 				<div class="panel-heading">Download data</div>
 				<div class="panel-body">
 					<div class="col-md-12">
+						<input class="btn btn-lg btn-primary btn-block"
+							value="Output all swaps"
+							onClick="window.open('${pageContext.request.contextPath}/getSwapCSV');">
 						<form target="_blank" action="getSwapCSVGivenTraderId"
 							method="GET" class="form-horizontal" role="form">
 							<div class="form-group">

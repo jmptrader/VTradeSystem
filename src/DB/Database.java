@@ -523,4 +523,25 @@ public class Database {
 			return null;
 		}
 	}
+
+	public static String getSwapCSV() {
+		try {
+			connect();
+			stmt = conn.createStatement();
+			ResultSet rset = stmt
+					.executeQuery("select CONCAT_WS(',', swapId, trader, start, termination, floatRate,"
+							+ "spread, fixedRate, fixedPayer, parValue, date, time) from Swaps ");
+			StringBuilder sb = new StringBuilder();
+			sb.append("transactionId, trader, start, termination, floatRate, spread, fixedRate, fixedPayer"
+					+ " parValue, date, time\n");
+			while (rset.next()) {
+				sb.append(rset.getString(1));
+				sb.append("\n");
+			}
+			return sb.toString();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
 }
