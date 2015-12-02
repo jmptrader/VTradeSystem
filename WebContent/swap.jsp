@@ -108,6 +108,23 @@
 				<div class="panel-heading">Swaps</div>
 				<div id="swapInfo"></div>
 			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">Download data</div>
+				<div class="panel-body">
+					<div class="col-md-12">
+						<form target="_blank" action="getSwapCSVGivenTraderId"
+							method="GET" class="form-horizontal" role="form">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Trader id:</label> <input
+									required type="number" min="1" class="form-control"
+									placeholder="Enter trader id" name="traderId">
+							</div>
+							<input class="btn btn-lg btn-primary btn-block" type="submit"
+								value="Output aggregation position for given trader id">
+						</form>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </body>
