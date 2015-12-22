@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,6 +23,7 @@ import DB.Database;
  */
 @WebServlet("/addSwap")
 public class addSwap extends HttpServlet {
+	private double DECISION_BOUND = 0.5f;
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -53,14 +55,18 @@ public class addSwap extends HttpServlet {
 		String day = df.format(date);
 		DateFormat tf = new SimpleDateFormat("HH:mm:ss");
 		String time = tf.format(date);
-		Integer swapId = Database.addSwap(request.getParameter("start"),
-				request.getParameter("termination"),
-				request.getParameter("floatRate"),
-				request.getParameter("spread"),
-				request.getParameter("fixedRate"),
-				request.getParameter("fixedPayer"),
-				request.getParameter("parValue"),
-				request.getParameter("trader"), day, time);
+		double random = new Random().nextDouble();
+		if (random <= DECISION_BOUND) {
+			// log the swap
+			Integer swapId = Database.addSwap(request.getParameter("start"),
+					request.getParameter("termination"),
+					request.getParameter("floatRate"),
+					request.getParameter("spread"),
+					request.getParameter("fixedRate"),
+					request.getParameter("fixedPayer"),
+					request.getParameter("parValue"),
+					request.getParameter("trader"), day, time);
+		}
 		response.sendRedirect(request.getContextPath() + "/swap.jsp");
 	}
 }
